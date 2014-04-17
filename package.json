@@ -1,0 +1,26 @@
+{
+  "name": "routey",
+  "version": "0.0.0",
+  "description": "Simple automatic route setup for NodeJS",
+  "main": "routey.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashleydavis/routey"
+  },
+  "keywords": [
+    "connect",
+    "express",
+    "nodejs",
+    "auto",
+    "route"
+  ],
+  "author": "Ashley Davis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ashleydavis/routey/issues"
+  },
+  "homepage": "https://github.com/ashleydavis/routey"
+}
