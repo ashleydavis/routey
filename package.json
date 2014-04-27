@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/ashleydavis/routey/issues"
   },
-  "homepage": "https://github.com/ashleydavis/routey"
+  "homepage": "https://github.com/ashleydavis/routey",
+  "devDependencies": {
+    "mockery": "^1.4.0"
+  }
 }
