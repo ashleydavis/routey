@@ -12,5 +12,5 @@ var route_init = require('./route_init');
 //
 module.exports = function (config, app) {
 
-	route_init(config, app);
+	route_init.init(config, app);
 };

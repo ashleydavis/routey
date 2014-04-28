@@ -2,7 +2,9 @@
 // Functions for initializing the routes.
 //
 
-module.exports = function (config, app) {
+module.exports = {
+	init: function (config, app) {
 
-	console.log('test');
+		console.log('test');
+	},
 };
