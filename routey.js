@@ -1,4 +1,6 @@
-var route_init = require('./route_init');
+'use strict';
+
+var RouteInitalizer = require('./route_init');
 
 //
 // Params
@@ -12,5 +14,5 @@ var route_init = require('./route_init');
 //
 module.exports = function (config, app) {
 
-	route_init.init(config, app);
+	var routeInitalizer = new RouteInitalizer(config, app);
 };

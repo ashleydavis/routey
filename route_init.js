@@ -1,10 +1,9 @@
+'use strict';
+
 //
 // Functions for initializing the routes.
 //
 
-module.exports = {
-	init: function (config, app) {
+module.exports = function RouteInitalizer(config, app) {
 
-		console.log('test');
-	},
 };

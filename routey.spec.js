@@ -1,3 +1,5 @@
+'use strict';
+
 var mockery = require('mockery');
 
 describe('routey', function () {
@@ -7,9 +9,7 @@ describe('routey', function () {
 	beforeEach(function () {
 		mockery.enable();
 
-		routeyInitMock = {	    
-			init: jasmine.createSpy(),
-		};
+		routeyInitMock = jasmine.createSpy();
 
 		mockery.registerMock('./route_init', routeyInitMock);
 		mockery.registerAllowable('./routey');
@@ -32,7 +32,7 @@ describe('routey', function () {
 
 		routey(config, app);
 
-		expect(routeyInitMock.init).toHaveBeenCalledWith(config, app);		
+		expect(routeyInitMock).toHaveBeenCalledWith(config, app);		
 	});
 
 });
