@@ -25,5 +25,8 @@
   "homepage": "https://github.com/ashleydavis/routey",
   "devDependencies": {
     "mockery": "^1.4.0"
+  },
+  "dependencies": {
+    "string": "^1.8.1"
   }
 }
