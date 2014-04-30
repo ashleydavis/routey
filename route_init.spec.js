@@ -9,7 +9,38 @@ describe('route_init', function () {
 	var mockFileMgr;
 	var mockApp;
 
+	//
+	// Mocks that have been registered before or during a test and should be
+	// unregistered after.
+	//
+	var registeredMocks = [];
+
+	//
+	// Register a require mock, the mock will be unregistered automatically
+	// after the test.
+	//
+	var registerRequireMock = function (mockName, mock) {
+
+		mockery.registerMock(mockName, mock);
+
+		registeredMocks.push(mockName);
+	};
+
+	//
+	// Unregister all require mocks that have been registered to this point.
+	//
+	var unregisterRequireMocks = function () {
+
+		registeredMocks.forEach(function (mockName) {
+			mockery.deregisterMock(mockName);
+		});
+
+		registeredMocks = [];
+	};
+
 	beforeEach(function () {
+		registeredMocks = [];
+
 		mockery.enable();
 
 		mockFileMgr = {	    
@@ -22,7 +53,7 @@ describe('route_init', function () {
 			get: jasmine.createSpy(),
 		};
 
-		mockery.registerMock('fileMgr', mockFileMgr);
+		registerRequireMock('fileMgr', mockFileMgr);
 		mockery.registerAllowable('./route_init');
 		mockery.registerAllowable('path');
 
@@ -32,7 +63,7 @@ describe('route_init', function () {
 	afterEach(function () {
 		mockery.deregisterAllowable('./route_init');
 		mockery.deregisterAllowable('path');
-		mockery.deregisterMock('fileMgr');
+		unregisterRequireMocks();
 
 		mockery.disable();
 	});
@@ -52,7 +83,7 @@ describe('route_init', function () {
 		mockFileMgr.jsFileExists = function (filePath) {
 			// Return true to fake that our test file exists.
 			return filePath === path.join(fileSystemPath, 'get.js');
-		}
+		};
 
 		var testObject = new RouteInitializer(config, mockApp);
 		testObject._processDirectory(dir);
@@ -74,11 +105,12 @@ describe('route_init', function () {
 		mockFileMgr.jsFileExists = function (filePath) {
 			// Return false to fake that our test file doesn't exists.
 			return false;
-		}
+		};
 
 		var testObject = new RouteInitializer(config, mockApp);
 		testObject._processDirectory(dir);
 
 		expect(mockApp.get).not.toHaveBeenCalledWith(routePath, jasmine.any(Function));
 	});
+
 });
