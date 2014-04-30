@@ -14,9 +14,14 @@ module.exports = function RouteInitalizer(config, app) {
 	//
 	this._processDirectory = function (dir) {
 
-		if (fileMgr.jsFileExists(path.join(dir.path, 'get.js'))) {
+		var getJsPath = path.join(dir.path, 'get.js');
+		if (fileMgr.jsFileExists(getJsPath)) {
+			// Require in the user-defined route config.
+			var getConfig = require('./' + getJsPath);
+
 			app.get(dir.routePath, function (req, res) {
-				//todo: do something!
+				// User-defined code handles the route.
+				getConfig.handler(req, res);
 			});
 		}
 	};

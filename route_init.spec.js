@@ -21,6 +21,8 @@ describe('route_init', function () {
 	//
 	var registerRequireMock = function (mockName, mock) {
 
+		console.log('Mocking: ' + mockName);
+
 		mockery.registerMock(mockName, mock);
 
 		registeredMocks.push(mockName);
@@ -73,6 +75,7 @@ describe('route_init', function () {
 
 		var config = {};
 		var fileSystemPath = 'parent/child';
+		var routeConfigPath = path.join(fileSystemPath, 'get.js');
 		var routePath = '/parent/child';
 		var dir = {
 			name: 'child',
@@ -80,9 +83,12 @@ describe('route_init', function () {
 			routePath: routePath,
 		};
 
+		var mockRouteConfig = {};
+		registerRequireMock('./' + routeConfigPath, mockRouteConfig);
+
 		mockFileMgr.jsFileExists = function (filePath) {
 			// Return true to fake that our test file exists.
-			return filePath === path.join(fileSystemPath, 'get.js');
+			return filePath === routeConfigPath;
 		};
 
 		var testObject = new RouteInitializer(config, mockApp);
@@ -113,4 +119,40 @@ describe('route_init', function () {
 		expect(mockApp.get).not.toHaveBeenCalledWith(routePath, jasmine.any(Function));
 	});
 
+	it('when get.js exists, it is loaded to handle a route', function () {
+
+		var config = {};
+		var fileSystemPath = 'parent/child';
+		var routeConfigPath = path.join(fileSystemPath, 'get.js');
+		var routePath = '/parent/child';
+		var dir = {
+			name: 'child',
+			path: fileSystemPath,
+			routePath: routePath,
+		};
+
+		// Mock for the route configuration loaded from the file.
+		var mockRouteConfig = {
+			handler: jasmine.createSpy(),
+		};
+
+		registerRequireMock('./' + routeConfigPath, mockRouteConfig);
+
+		mockFileMgr.jsFileExists = function (filePath) {
+				// Return true to fake that our test file exists.
+			return filePath === routeConfigPath;
+		};
+
+		var testObject = new RouteInitializer(config, mockApp);
+		testObject._processDirectory(dir);
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockRouteConfig.handler).toHaveBeenCalledWith(mockReq, mockRes)
+	});
 });
