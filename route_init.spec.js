@@ -21,7 +21,7 @@ describe('route_init', function () {
 	//
 	var registerRequireMock = function (mockName, mock) {
 
-		console.log('Mocking: ' + mockName);
+		//console.log('Mocking: ' + mockName);
 
 		mockery.registerMock(mockName, mock);
 
@@ -55,7 +55,7 @@ describe('route_init', function () {
 			get: jasmine.createSpy(),
 		};
 
-		registerRequireMock('fileMgr', mockFileMgr);
+		registerRequireMock('./fileMgr', mockFileMgr);
 		mockery.registerAllowable('./route_init');
 		mockery.registerAllowable('path');
 
@@ -83,15 +83,16 @@ describe('route_init', function () {
 			routePath: routePath,
 		};
 
-		var mockRouteConfig = {};
-		registerRequireMock('./' + routeConfigPath, mockRouteConfig);
-
 		mockFileMgr.jsFileExists = function (filePath) {
 			// Return true to fake that our test file exists.
 			return filePath === routeConfigPath;
 		};
 
 		var testObject = new RouteInitializer(config, mockApp);
+
+		var mockRouteConfig = {};
+		registerRequireMock(testObject._formatPathForRequire(routeConfigPath), mockRouteConfig);
+
 		testObject._processDirectory(dir);
 
 		expect(mockApp.get).toHaveBeenCalledWith(routePath, jasmine.any(Function));
@@ -131,19 +132,20 @@ describe('route_init', function () {
 			routePath: routePath,
 		};
 
-		// Mock for the route configuration loaded from the file.
-		var mockRouteConfig = {
-			handler: jasmine.createSpy(),
-		};
-
-		registerRequireMock('./' + routeConfigPath, mockRouteConfig);
-
 		mockFileMgr.jsFileExists = function (filePath) {
 				// Return true to fake that our test file exists.
 			return filePath === routeConfigPath;
 		};
 
 		var testObject = new RouteInitializer(config, mockApp);
+
+		// Mock for the route configuration loaded from the file.
+		var mockRouteConfig = {
+			handler: jasmine.createSpy(),
+		};
+		
+		registerRequireMock(testObject._formatPathForRequire(routeConfigPath), mockRouteConfig);
+
 		testObject._processDirectory(dir);
 
 		var handler = mockApp.get.mostRecentCall.args[1];

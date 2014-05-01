@@ -4,35 +4,48 @@ var mockery = require('mockery');
 
 describe('routey', function () {
 	var routey;
-	var routeyInitMock;
+	var mockRouteyInit;
 
 	beforeEach(function () {
 		mockery.enable();
 
-		routeyInitMock = jasmine.createSpy();
+		mockRouteyInit = {
+			_processDirectory: jasmine.createSpy(),
+		};
 
-		mockery.registerMock('./route_init', routeyInitMock);
+		mockery.registerMock('./route_init', function () { return mockRouteyInit; });
 		mockery.registerAllowable('./routey');
+		mockery.registerAllowable('path');
 
 		routey = require('./routey');
 	});
 
 	afterEach(function () {
 		mockery.deregisterAllowable('./routey');
+		mockery.deregisterAllowable('path');
 		mockery.deregisterMock('./route_init');
 
 		mockery.disable();
 	});
 
-
 	it('external interface calls through to route init', function () {
 
-		var config = {};
+		var parentDir = 'parent';
+		var childDir = 'child';
+		var fullPath = parentDir + '/' + childDir;
+
+		var config = {
+			routeConfigPath: fullPath,
+		};
 		var app = {};
 
 		routey(config, app);
 
-		expect(routeyInitMock).toHaveBeenCalledWith(config, app);		
+		expect(mockRouteyInit._processDirectory).toHaveBeenCalledWith({
+			name: childDir,
+			path: fullPath,
+			routePath: '/',
+		});
 	});
 
 });
