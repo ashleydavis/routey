@@ -46,7 +46,7 @@ describe('route_init', function () {
 		mockery.enable();
 
 		mockFileMgr = {	    
-			jsFileExists: function (filePath) {
+			fileExists: function (filePath) {
 				return false;
 			},
 		};
@@ -83,7 +83,7 @@ describe('route_init', function () {
 			routePath: routePath,
 		};
 
-		mockFileMgr.jsFileExists = function (filePath) {
+		mockFileMgr.fileExists = function (filePath) {
 			// Return true to fake that our test file exists.
 			return filePath === routeConfigPath;
 		};
@@ -109,7 +109,7 @@ describe('route_init', function () {
 			routePath: routePath,
 		};
 
-		mockFileMgr.jsFileExists = function (filePath) {
+		mockFileMgr.fileExists = function (filePath) {
 			// Return false to fake that our test file doesn't exists.
 			return false;
 		};
@@ -132,7 +132,7 @@ describe('route_init', function () {
 			routePath: routePath,
 		};
 
-		mockFileMgr.jsFileExists = function (filePath) {
+		mockFileMgr.fileExists = function (filePath) {
 				// Return true to fake that our test file exists.
 			return filePath === routeConfigPath;
 		};

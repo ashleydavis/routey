@@ -30,7 +30,7 @@ module.exports = function RouteInitalizer(config, app) {
 	this._processDirectory = function (dir) {
 
 		var getJsPath = path.join(dir.path, 'get.js');
-		if (fileMgr.jsFileExists(getJsPath)) {
+		if (fileMgr.fileExists(getJsPath)) {
 			
 			// Require in the user-defined route config.
 			var getConfig = require(this._formatPathForRequire(getJsPath));

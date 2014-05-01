@@ -6,12 +6,10 @@ var fs = require('fs');
 
 module.exports = {    
     //
-    // Returns true if the specified JavaScript file exists.
+    // Returns true if the specified file exists.
     //
-    jsFileExists: function (filePath) {
-        console.log('exists?');
-        console.log(filePath);
+    fileExists: function (filePath) {
 
-        return true;
+        return fs.existsSync(filePath);
     },
 };
