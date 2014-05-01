@@ -2,7 +2,7 @@
 
 var request = require('request');
 
-describe('example1', function () {
+describe('example3', function () {
 
 	var restServer;
 
@@ -18,9 +18,9 @@ describe('example1', function () {
 
 	it('can get correct value from rest server', function (done) {
 
-		request('http://localhost:3000/', function (err, response, body) {
+		request('http://localhost:3000/sub/sub/', function (err, response, body) {
 
-			expect(body).toBe('first example!')
+			expect(body).toBe('3rd example!')
 
 			done();
 		});
