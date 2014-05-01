@@ -125,7 +125,7 @@ describe('route_init', function () {
 		var config = {};
 		var fileSystemPath = 'parent/child';
 		var routeConfigPath = path.join(fileSystemPath, 'get.js');
-		var routePath = '/parent/child';
+		var routePath = '/some/other/route';
 		var dir = {
 			name: 'child',
 			path: fileSystemPath,
@@ -157,4 +157,5 @@ describe('route_init', function () {
 
 		expect(mockRouteConfig.handler).toHaveBeenCalledWith(mockReq, mockRes)
 	});
+
 });
