@@ -1,8 +1,5 @@
 'use strict';
 
-var path = require('path');
-var RouteInitalizer = require('./route_init');
-
 //
 // Params
 // 	config				-> Routey configuration.
@@ -15,12 +12,16 @@ var RouteInitalizer = require('./route_init');
 //
 module.exports = function (config, app) {
 
+	var path = require('path');
+	var RouteInitalizer = require('./route_init');
+
 	var routeInitalizer = new RouteInitalizer(config, app);
 
-    // hack: to kick start integration testing.
-    routeInitalizer._processDirectory({
+	var routeConfigDir = {
         name: path.basename(config.routeConfigPath),
         path: config.routeConfigPath,
         routePath: '/',
-    });
+    };
+
+    routeInitalizer._processDirectory(routeConfigDir);
 };

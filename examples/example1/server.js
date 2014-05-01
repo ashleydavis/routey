@@ -1,3 +1,4 @@
+
 var path = require('path');
 var express = require('express');
 
@@ -10,6 +11,10 @@ routey({
     verbose: true,
 }, app);
 
-app.listen(3000);
+var server = app.listen(3000);
 
+module.exports = {
+	app: app,
+	server: server,
+};
 
