@@ -40,14 +40,14 @@ module.exports = function RouteInitalizer(config, app) {
 	//
 	this._processDirectory = function (dir) {
 
+		var route = this._formatPathAsRoute(path.join(dir.parentRoute, dir.name));
+
 		// If the directory contains a 'get.js' load it is as a route config.
 		var getJsPath = path.join(dir.path, 'get.js');
 		if (fileMgr.fileExists(getJsPath)) {
 			
 			// Require in the user-defined route config.
 			var getConfig = require(this._formatPathForRequire(getJsPath));
-
-			var route = this._formatPathAsRoute(dir.routePath);
 
 			logVerbose('Registering route: ' + route);
 
@@ -66,7 +66,7 @@ module.exports = function RouteInitalizer(config, app) {
 				that._processDirectory({
 					name: subDirName,
 					path: path.join(dir.path, subDirName),
-					routePath: path.join(dir.routePath, subDirName),
+					parentRoute: route,
 				});				
 			});
 	};
