@@ -81,24 +81,30 @@ describe('route_init', function () {
 		mockery.disable();
 	});
 
+	var initDir = function (childDirName, parentPath, parent) {
+		parentPath = parentPath || "";
+		if (arguments.length < 3) {
+			parent = { 
+				config: {},
+			};
+		}
+
+		return {
+			name: childDirName,
+			path: path.join(parentPath, childDirName),
+			parentRoute: '/' + parentPath,
+			config: {},
+			parent: parent,
+		};
+	};
 
 	it('directory with get.js registers for HTTP get', function () {
 
 		var parentDirName = 'parent';
 		var childDirName = 'child';
-		var fileSystemPath = path.join(parentDirName, childDirName);
-		var getConfigPath = path.join(fileSystemPath, 'get.js');
-		var parentRoute = '/' + parentDirName;
-		var expectedRoutePath = parentRoute + '/' + childDirName;
-		var dir = {
-			name: childDirName,
-			path: fileSystemPath,
-			parentRoute: parentRoute,
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
+		var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
+		var dir = initDir(childDirName, parentDirName);
 
 		mockFileMgr.fileExists = function (filePath) {
 			// Return true to fake that our test file exists.
@@ -120,15 +126,7 @@ describe('route_init', function () {
 		var fileSystemPath = path.join(parentDirName, childDirName);
 		var parentRoute = '/' + parentDirName;
 		var expectedRoutePath = parentRoute + '/' + childDirName;
-		var dir = {
-			name: childDirName,
-			path: fileSystemPath,
-			parentRoute: parentRoute,
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var dir = initDir(childDirName, parentDirName);
 
 		mockFileMgr.fileExists = function (filePath) {
 			// Return false to fake that our test file doesn't exists.
@@ -142,17 +140,9 @@ describe('route_init', function () {
 
 	it('when get.js exists, it is loaded to handle a route', function () {
 
-		var fileSystemPath = 'parent/child';
+		var fileSystemPath = 'parent\\child';
 		var getConfigPath = path.join(fileSystemPath, 'get.js');
-		var dir = {
-			name: 'child',
-			path: fileSystemPath,
-			parentRoute: 'this doesnt matter here',
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var dir = initDir('child', 'parent');
 
 		mockFileMgr.fileExists = function (filePath) {
 				// Return true to fake that our test file exists.
@@ -182,25 +172,15 @@ describe('route_init', function () {
 
 		var childDirName = 'child';
 		var parentDirName = 'parent';
-		var fileSystemPath = path.join('root', parentDirName);
-		var parentRoutePath = '/' + parentDirName;
-		var expectedRoutePath = parentRoutePath + '/' + childDirName;
-		var dir = {
-			name: parentDirName,
-			path: fileSystemPath,
-			parentRoute: '/',
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
+		var dir = initDir(parentDirName);
 
-		var childFileSystemPath = path.join(fileSystemPath, childDirName);
+		var childFileSystemPath = path.join(parentDirName, childDirName);
 		var getConfigPath = path.join(childFileSystemPath, 'get.js');
 
 		// Mock out directories.
 		mockFileMgr.getDirectories = function (dirPath) {
-			if (dirPath === fileSystemPath) {
+			if (dirPath === parentDirName) {
 				return [ childDirName ];
 			}
 			else {
@@ -225,18 +205,10 @@ describe('route_init', function () {
 
 		var childDirName = 'child';
 		var parentDirName = 'parent';
-		var fileSystemPath = path.join('root', parentDirName);
+		var fileSystemPath = parentDirName;
 		var parentRoutePath = '/' + parentDirName;
 		var expectedRoutePath = parentRoutePath + '/' + childDirName;
-		var dir = {
-			name: parentDirName,
-			path: fileSystemPath,
-			parentRoute: '/',
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var dir = initDir(parentDirName);
 
 		var childFileSystemPath = path.join(fileSystemPath, childDirName);
 		var getConfigPath = path.join(childFileSystemPath, 'get.js');
@@ -284,16 +256,7 @@ describe('route_init', function () {
         var dirConfigPath = path.join(fileSystemPath, 'route.js');
         var parentRoutePath = '/' + parentDirName;
         var expectedRoutePath = parentRoutePath + '/' + customizedRouteName;
-
-        var dir = {
-            name: childDirName,
-            path: fileSystemPath,
-            parentRoute: parentRoutePath,
-            config: {},
-			parent: {
-				config: {},
-			},
-        };
+		var dir = initDir(childDirName, parentDirName);
 
         mockFileMgr.fileExists = function (filePath) {
             // Return true to fake that our test file exists.
@@ -324,16 +287,7 @@ describe('route_init', function () {
         var dirConfigPath = path.join(fileSystemPath, 'route.js');
         var parentRoutePath = '/' + parentDirName;
         var expectedRoutePath = parentRoutePath + '/' + childDirName;
-
-        var dir = {
-            name: childDirName,
-            path: fileSystemPath,
-            parentRoute: parentRoutePath,
-            config: {},
-			parent: {
-				config: {},
-			},
-        };
+        var dir = initDir(childDirName, parentDirName);
 
         mockFileMgr.fileExists = function (filePath) {
             // Return true to fake that our test file exists.
@@ -358,13 +312,7 @@ describe('route_init', function () {
 		var fileSystemPath = rootDirName;
 		var getConfigPath = path.join(fileSystemPath, 'get.js');
 		var expectedRoutePath = '/';
-		var dir = {
-			name: rootDirName,
-			path: rootDirName,
-			parentRoute: '/',
-			config: {},
-			parent: null,
-		};
+        var dir = initDir(rootDirName, "", null);
 
 		mockFileMgr.fileExists = function (filePath) {
 			// Return true to fake that our test file exists.
@@ -387,14 +335,7 @@ describe('route_init', function () {
 		var dirConfigPath = path.join(fileSystemPath, 'route.js');
 		var customizedRoute = 'customized';
 		var expectedRoutePath = '/' + customizedRoute;
-
-		var dir = {
-			name: rootDirName,
-			path: rootDirName,
-			parentRoute: '/',
-			config: {},
-			parent: null,
-		};
+        var dir = initDir(rootDirName, "", null);
 
 		mockFileMgr.fileExists = function (filePath) {
 			// Return true to fake that our test file exists.
@@ -417,18 +358,10 @@ describe('route_init', function () {
 
 	it('route is opened', function () {
 
-		var fileSystemPath = 'parent/child';
+		var fileSystemPath = 'parent\\child';
 		var getConfigPath = path.join(fileSystemPath, 'get.js');
 		var dirConfigPath = path.join(fileSystemPath, 'route.js');
-		var dir = {
-			name: 'child',
-			path: fileSystemPath,
-			parentRoute: 'this doesnt matter here',
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var dir = initDir('child', 'parent');
 
 		mockFileMgr.fileExists = function (filePath) {
 			return filePath === getConfigPath ||
@@ -458,6 +391,7 @@ describe('route_init', function () {
 
 		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
 	});
+
 	it('parent route is opened when a child route is handled', function () {
 
 		var childDirName = 'child';
@@ -465,15 +399,7 @@ describe('route_init', function () {
 		var fileSystemPath = parentDirName;
 		var parentRoutePath = '/' + parentDirName;
 		var expectedRoutePath = parentRoutePath + '/' + childDirName;
-		var dir = {
-			name: parentDirName,
-			path: fileSystemPath,
-			parentRoute: '/',
-			config: {},
-			parent: {
-				config: {},
-			},
-		};
+		var dir = initDir(parentDirName);
 
 		var childFileSystemPath = path.join(fileSystemPath, childDirName);
 		var childGetConfigPath = path.join(childFileSystemPath, 'get.js');
@@ -520,23 +446,18 @@ describe('route_init', function () {
 
 	it('fully mocked parent is opened when a child route is handled', function () {
 
-		var dirName = 'parent';
-		var fileSystemPath = dirName;
-		var parentRoutePath = '/' + dirName;
-		var expectedRoutePath = parentRoutePath;
-		var dir = {
-			name: dirName,
-			path: fileSystemPath,
-			parentRoute: '/',
-			config: {},
-			parent: {
-				config: {
+		var dirName = 'child';
+		var parentDirName = 'parent';
+		var fileSystemPath = path.join(parentDirName, dirName);
+		var parentRoutePath = '/' + parentDirName;
+		var expectedRoutePath = parentRoutePath + dirName;
+		var dir = initDir(dirName, parentDirName, {
+			config: {
 					userConfig: {
 						openRoute: jasmine.createSpy(),
 					},
-				},
-			},
-		};
+				},			
+		});
 
 		var getConfigPath = path.join(fileSystemPath, 'get.js');
 
@@ -569,19 +490,13 @@ describe('route_init', function () {
 		var fileSystemPath = parentDirName;
 		var parentRoutePath = '/' + parentDirName;
 		var expectedRoutePath = parentRoutePath + '/' + childDirName;
-		var dir = {
-			name: parentDirName,
-			path: fileSystemPath,
-			parentRoute: '/',
-			config: {},
-			parent: {
-				config: {
+		var dir = initDir(childDirName, parentDirName, {
+			config: {
 					userConfig: {
 						openRoute: jasmine.createSpy(),
 					},
-				},
-			},
-		};
+				},			
+		});
 
 		var childFileSystemPath = path.join(fileSystemPath, childDirName);
 		var childGetConfigPath = path.join(childFileSystemPath, 'get.js');
