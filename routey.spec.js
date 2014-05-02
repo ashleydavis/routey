@@ -74,6 +74,7 @@ describe('routey', function () {
 			name: childDir,
 			path: fullPath,
 			parentRoute: '/',
+			isRoot: true,
 		});
 	});
 

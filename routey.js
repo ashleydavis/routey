@@ -33,6 +33,7 @@ module.exports = function (config, app) {
         name: path.basename(config.routeConfigPath),
         path: config.routeConfigPath,
         parentRoute: '/',
+        isRoot: true,
     };
 
     routeInitalizer._processDirectory(routeConfigDir);
