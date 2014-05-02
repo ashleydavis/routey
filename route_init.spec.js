@@ -122,6 +122,18 @@ describe('route_init', function () {
 		return mockGetConfig;
 	};
 
+	// Helper: Create a mock user-dir-config.	
+	var initMockDirConfig = function (path) {
+		var mockDirConfig = {
+			openRoute: jasmine.createSpy(),
+		};
+		registerRequireMock(testObject._formatPathForRequire(path), mockDirConfig);
+
+		filesThatExist.push(path);
+
+		return mockDirConfig;
+	};
+
 	it('directory with get.js registers for HTTP get', function () {
 
 		var parentDirName = 'parent';
@@ -229,17 +241,14 @@ describe('route_init', function () {
         var childDirName = 'child';
 		var dir = initDir(childDirName, parentDirName);
 
-        var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
-        filesThatExist.push(dirConfigPath);
-
         var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
+        var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
+        var mockDirConfig = initMockDirConfig(dirConfigPath);
+
         var customizedRouteName = 'customized-route';
-        var mockDirConfig = {
-        	route: customizedRouteName,
-        };
-        registerRequireMock(testObject._formatPathForRequire(dirConfigPath), mockDirConfig);
+        mockDirConfig.route = customizedRouteName;
 
         testObject._processDirectory(dir);
 
@@ -253,14 +262,11 @@ describe('route_init', function () {
         var childDirName = 'child';
         var dir = initDir(childDirName, parentDirName);
 
-        var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
-        filesThatExist.push(dirConfigPath);
-
         var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
-        var mockDirConfig = {};
-        registerRequireMock(testObject._formatPathForRequire(dirConfigPath), mockDirConfig);
+        var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
+        var mockDirConfig = initMockDirConfig(dirConfigPath);
 
         testObject._processDirectory(dir);
 
@@ -287,17 +293,14 @@ describe('route_init', function () {
 		var rootDirName = 'root';
         var dir = initDir(rootDirName, "", null);
 
-		var dirConfigPath = path.join(rootDirName, 'route.js');
-        filesThatExist.push(dirConfigPath);
-
 		var getConfigPath = path.join(rootDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
+		var dirConfigPath = path.join(rootDirName, 'route.js');
+        var mockDirConfig = initMockDirConfig(dirConfigPath);
+
 		var customizedRoute = 'customized';
-        var mockDirConfig = {
-        	route: customizedRoute
-        };
-        registerRequireMock(testObject._formatPathForRequire(dirConfigPath), mockDirConfig);
+        mockDirConfig.route = customizedRoute;
 
 		testObject._processDirectory(dir);
 
@@ -311,17 +314,11 @@ describe('route_init', function () {
 		var parentDirName = 'parent';
 		var dir = initDir(childDirName, parentDirName);
 
-		var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
-        filesThatExist.push(dirConfigPath);
-
 		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
-		var mockDirConfig = {
-			openRoute: jasmine.createSpy(),
-		};
-		
-		registerRequireMock(testObject._formatPathForRequire(dirConfigPath), mockDirConfig);
+		var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
+        var mockDirConfig = initMockDirConfig(dirConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -351,16 +348,10 @@ describe('route_init', function () {
 		};
 
 		var childGetConfigPath = path.join(parentDirName, childDirName, 'get.js');
-		var parentDirConfigPath = path.join(parentDirName, 'route.js');
-        filesThatExist.push(parentDirConfigPath);
-
 		var mockGetConfig = initMockGetConfig(childGetConfigPath);
 
-		var mockDirConfig = {
-			openRoute: jasmine.createSpy(),
-		};
-		registerRequireMock(testObject._formatPathForRequire(parentDirConfigPath), mockDirConfig);
-
+		var parentDirConfigPath = path.join(parentDirName, 'route.js');
+        var mockDirConfig = initMockDirConfig(parentDirConfigPath);
 
 		testObject._processDirectory(dir);
 
