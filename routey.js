@@ -29,10 +29,14 @@ module.exports = function (config, app) {
 
 	var routeInitalizer = new RouteInitalizer(config, app);
 
+
+    var defaultParentRoute = '/';
+    var parentRoute = config.parentRoute || defaultParentRoute;
+
 	var routeConfigDir = {
         name: path.basename(config.routeConfigPath),
         path: config.routeConfigPath,
-        parentRoute: '/',
+        parentRoute: parentRoute,
         isRoot: true,
     };
 

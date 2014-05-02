@@ -62,6 +62,29 @@ describe('routey', function () {
 		var parentDir = 'parent';
 		var childDir = 'child';
 		var fullPath = parentDir + '/' + childDir;
+		var parentRoute = '/myparent';
+
+		var config = {
+			routeConfigPath: fullPath,
+			parentRoute: parentRoute,
+		};
+		var app = {};
+
+		routey(config, app);
+
+		expect(mockRouteyInit._processDirectory).toHaveBeenCalledWith({
+			name: childDir,
+			path: fullPath,
+			parentRoute: parentRoute,
+			isRoot: true,
+		});
+	});
+
+	it('parent route is defaulted when not specified', function () {
+
+		var parentDir = 'parent';
+		var childDir = 'child';
+		var fullPath = parentDir + '/' + childDir;
 
 		var config = {
 			routeConfigPath: fullPath,
@@ -77,5 +100,4 @@ describe('routey', function () {
 			isRoot: true,
 		});
 	});
-
 });
