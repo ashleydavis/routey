@@ -102,12 +102,10 @@ describe('route_init', function () {
 
 		var parentDirName = 'parent';
 		var childDirName = 'child';
-		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-		var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
 		var dir = initDir(childDirName, parentDirName);
 
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === getConfigPath;
 		};
 
@@ -116,6 +114,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(dir);
 
+		var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
@@ -123,33 +122,24 @@ describe('route_init', function () {
 
 		var parentDirName = 'parent';
 		var childDirName = 'child';
-		var fileSystemPath = path.join(parentDirName, childDirName);
-		var parentRoute = '/' + parentDirName;
-		var expectedRoutePath = parentRoute + '/' + childDirName;
 		var dir = initDir(childDirName, parentDirName);
-
-		mockFileMgr.fileExists = function (filePath) {
-			// Return false to fake that our test file doesn't exists.
-			return false;
-		};
 
 		testObject._processDirectory(dir);
 
-		expect(mockApp.get).not.toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
+		expect(mockApp.get).not.toHaveBeenCalled();
 	});
 
 	it('when get.js exists, it is loaded to handle a route', function () {
 
-		var fileSystemPath = 'parent\\child';
-		var getConfigPath = path.join(fileSystemPath, 'get.js');
-		var dir = initDir('child', 'parent');
+		var childDirName = 'child';
+		var parentDirName = 'parent';
+		var dir = initDir(childDirName, parentDirName);
 
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-				// Return true to fake that our test file exists.
 			return filePath === getConfigPath;
 		};
 
-		// Mock for the route configuration loaded from the file.
 		var mockGetConfig = {
 			handler: jasmine.createSpy(),
 		};
