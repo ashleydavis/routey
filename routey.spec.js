@@ -77,6 +77,8 @@ describe('routey', function () {
 			path: fullPath,
 			parentRoute: parentRoute,
 			isRoot: true,
+			config: {},
+			parent: null,
 		});
 	});
 
@@ -98,6 +100,8 @@ describe('routey', function () {
 			path: fullPath,
 			parentRoute: '/',
 			isRoot: true,
+			config: {},
+			parent: null,
 		});
 	});
 });

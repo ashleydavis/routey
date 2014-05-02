@@ -38,6 +38,8 @@ module.exports = function (config, app) {
         path: config.routeConfigPath,
         parentRoute: parentRoute,
         isRoot: true,
+        config: {},
+        parent: null,
     };
 
     routeInitalizer._processDirectory(routeConfigDir);

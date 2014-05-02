@@ -58,7 +58,6 @@ module.exports = function RouteInitalizer(config, app) {
 		// But only for sub-directories, not for the root rest directory.
 		//
 		var subRouteName = dir.isRoot ? "" : dir.name;
-		dir.config = {};
 
 		// If the directory has a 'route.js' load it as a route config for the directory.
 		var dirConfigPath = path.join(dir.path, 'route.js');
@@ -107,6 +106,7 @@ module.exports = function RouteInitalizer(config, app) {
 					path: path.join(dir.path, subDirName),
 					parentRoute: route,
 					isRoot: false,
+					config: {},
 					parent: dir,
 				});
 			});

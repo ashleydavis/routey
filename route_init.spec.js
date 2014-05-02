@@ -90,6 +90,8 @@ describe('route_init', function () {
 			path: fileSystemPath,
 			parentRoute: parentRoute,
 			isRoot: false,
+			config: {},
+			parent: null,
 		};
 
 		mockFileMgr.fileExists = function (filePath) {
@@ -120,6 +122,8 @@ describe('route_init', function () {
 			path: fileSystemPath,
 			parentRoute: parentRoute,
 			isRoot: false,
+			config: {},
+			parent: null,
 		};
 
 		mockFileMgr.fileExists = function (filePath) {
@@ -143,6 +147,8 @@ describe('route_init', function () {
 			path: fileSystemPath,
 			parentRoute: 'this doesnt matter here',
 			isRoot: false,
+			config: {},
+			parent: null,
 		};
 
 		mockFileMgr.fileExists = function (filePath) {
@@ -184,6 +190,8 @@ describe('route_init', function () {
 			path: fileSystemPath,
 			parentRoute: '/',
 			isRoot: false,
+			config: {},
+			parent: null,
 		};
 
 		var childFileSystemPath = path.join(fileSystemPath, childDirName);
@@ -227,6 +235,8 @@ describe('route_init', function () {
 			path: fileSystemPath,
 			parentRoute: '/',
 			isRoot: false,
+			config: {},
+			parent: null,
 		};
 
 		var childFileSystemPath = path.join(fileSystemPath, childDirName);
@@ -284,6 +294,8 @@ describe('route_init', function () {
             path: fileSystemPath,
             parentRoute: parentRoutePath,
             isRoot: false,
+            config: {},
+            parent: null,
         };
 
         mockFileMgr.fileExists = function (filePath) {
@@ -324,6 +336,8 @@ describe('route_init', function () {
             path: fileSystemPath,
             parentRoute: parentRoutePath,
             isRoot: false,
+            config: {},
+            parent: null,
         };
 
         mockFileMgr.fileExists = function (filePath) {
@@ -357,6 +371,8 @@ describe('route_init', function () {
 			path: rootDirName,
 			parentRoute: '/',
 			isRoot: true,
+			config: {},
+			parent: null,
 		};
 
 		mockFileMgr.fileExists = function (filePath) {
@@ -389,6 +405,8 @@ describe('route_init', function () {
 			path: rootDirName,
 			parentRoute: '/',
 			isRoot: true,
+			config: {},
+			parent: null,
 		};
 
 		mockFileMgr.fileExists = function (filePath) {
@@ -426,6 +444,8 @@ describe('route_init', function () {
 			path: fileSystemPath,
 			parentRoute: '/',
 			isRoot: false,
+			config: {},
+			parent: null,
 		};
 
 		var childFileSystemPath = path.join(fileSystemPath, childDirName);
@@ -476,4 +496,6 @@ describe('route_init', function () {
 
 		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
 	});	
+
+
 });
