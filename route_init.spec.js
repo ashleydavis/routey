@@ -170,15 +170,10 @@ describe('route_init', function () {
 
 	it('sub-directory with get.js registers for HTTP get', function () {
 
-		var childDirName = 'child';
 		var parentDirName = 'parent';
-		var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
 		var dir = initDir(parentDirName);
 
-		var childFileSystemPath = path.join(parentDirName, childDirName);
-		var getConfigPath = path.join(childFileSystemPath, 'get.js');
-
-		// Mock out directories.
+		var childDirName = 'child';
 		mockFileMgr.getDirectories = function (dirPath) {
 			if (dirPath === parentDirName) {
 				return [ childDirName ];
@@ -188,8 +183,8 @@ describe('route_init', function () {
 			}
 		};
 
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === getConfigPath;
 		};
 
@@ -198,24 +193,18 @@ describe('route_init', function () {
 
 		testObject._processDirectory(dir);
 
+		var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
 	it('when get.js exists in a sub-directory, it is loaded to handle a route', function () {
 
-		var childDirName = 'child';
 		var parentDirName = 'parent';
-		var fileSystemPath = parentDirName;
-		var parentRoutePath = '/' + parentDirName;
-		var expectedRoutePath = parentRoutePath + '/' + childDirName;
 		var dir = initDir(parentDirName);
 
-		var childFileSystemPath = path.join(fileSystemPath, childDirName);
-		var getConfigPath = path.join(childFileSystemPath, 'get.js');
-
-		// Mock out directories.
+		var childDirName = 'child';
 		mockFileMgr.getDirectories = function (dirPath) {
-			if (dirPath === fileSystemPath) {
+			if (dirPath === parentDirName) {
 				return [ childDirName ];
 			}
 			else {
@@ -223,12 +212,11 @@ describe('route_init', function () {
 			}
 		};
 
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === getConfigPath;
 		};
 
-		// Mock for the route configuration loaded from the file.
 		var mockGetConfig = {
 			handler: jasmine.createSpy(),
 		};
@@ -250,16 +238,11 @@ describe('route_init', function () {
 
         var parentDirName = 'parent';
         var childDirName = 'child';
-        var customizedRouteName = 'customized-route';
-        var fileSystemPath = path.join(parentDirName, childDirName);
-        var getConfigPath = path.join(fileSystemPath, 'get.js');
-        var dirConfigPath = path.join(fileSystemPath, 'route.js');
-        var parentRoutePath = '/' + parentDirName;
-        var expectedRoutePath = parentRoutePath + '/' + customizedRouteName;
 		var dir = initDir(childDirName, parentDirName);
 
+        var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
+        var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
         mockFileMgr.fileExists = function (filePath) {
-            // Return true to fake that our test file exists.
             return filePath === getConfigPath ||
                    filePath === dirConfigPath;
         };
@@ -267,6 +250,7 @@ describe('route_init', function () {
         var mockGetConfig = {};
         registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
 
+        var customizedRouteName = 'customized-route';
         var mockDirConfig = {
         	route: customizedRouteName,
         };
@@ -274,6 +258,7 @@ describe('route_init', function () {
 
         testObject._processDirectory(dir);
 
+        var expectedRoutePath = '/' + parentDirName + '/' + customizedRouteName;
         expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
     }); 
 
@@ -281,16 +266,11 @@ describe('route_init', function () {
 
         var parentDirName = 'parent';
         var childDirName = 'child';
-        var customizedRouteName = 'customized-route';
-        var fileSystemPath = path.join(parentDirName, childDirName);
-        var getConfigPath = path.join(fileSystemPath, 'get.js');
-        var dirConfigPath = path.join(fileSystemPath, 'route.js');
-        var parentRoutePath = '/' + parentDirName;
-        var expectedRoutePath = parentRoutePath + '/' + childDirName;
         var dir = initDir(childDirName, parentDirName);
 
+        var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
+        var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
         mockFileMgr.fileExists = function (filePath) {
-            // Return true to fake that our test file exists.
             return filePath === getConfigPath ||
                    filePath === dirConfigPath;
         };
@@ -303,19 +283,17 @@ describe('route_init', function () {
 
         testObject._processDirectory(dir);
 
+        var expectedRoutePath = '/' + parentDirName + '/' + childDirName;
         expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
     }); 
 
 	it('name of root directory doesnt appear in route path', function () {
 
 		var rootDirName = 'root';
-		var fileSystemPath = rootDirName;
-		var getConfigPath = path.join(fileSystemPath, 'get.js');
-		var expectedRoutePath = '/';
         var dir = initDir(rootDirName, "", null);
 
+		var getConfigPath = path.join(rootDirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === getConfigPath;
 		};
 
@@ -324,21 +302,18 @@ describe('route_init', function () {
 
 		testObject._processDirectory(dir);
 
+		var expectedRoutePath = '/';
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
 	it('route path can be customized', function () {
 
 		var rootDirName = 'root';
-		var fileSystemPath = rootDirName;
-		var getConfigPath = path.join(fileSystemPath, 'get.js');
-		var dirConfigPath = path.join(fileSystemPath, 'route.js');
-		var customizedRoute = 'customized';
-		var expectedRoutePath = '/' + customizedRoute;
         var dir = initDir(rootDirName, "", null);
 
+		var getConfigPath = path.join(rootDirName, 'get.js');
+		var dirConfigPath = path.join(rootDirName, 'route.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
             return filePath === getConfigPath ||
                    filePath === dirConfigPath;
 		};
@@ -346,6 +321,7 @@ describe('route_init', function () {
 		var mockGetConfig = {};
 		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
 
+		var customizedRoute = 'customized';
         var mockDirConfig = {
         	route: customizedRoute
         };
@@ -353,16 +329,18 @@ describe('route_init', function () {
 
 		testObject._processDirectory(dir);
 
+		var expectedRoutePath = '/' + customizedRoute;
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
 	it('route is opened', function () {
 
-		var fileSystemPath = 'parent\\child';
-		var getConfigPath = path.join(fileSystemPath, 'get.js');
-		var dirConfigPath = path.join(fileSystemPath, 'route.js');
-		var dir = initDir('child', 'parent');
+		var childDirName = 'child';
+		var parentDirName = 'parent';
+		var dir = initDir(childDirName, parentDirName);
 
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
+		var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
 		mockFileMgr.fileExists = function (filePath) {
 			return filePath === getConfigPath ||
 				   filePath === dirConfigPath;
@@ -394,20 +372,12 @@ describe('route_init', function () {
 
 	it('parent route is opened when a child route is handled', function () {
 
-		var childDirName = 'child';
 		var parentDirName = 'parent';
-		var fileSystemPath = parentDirName;
-		var parentRoutePath = '/' + parentDirName;
-		var expectedRoutePath = parentRoutePath + '/' + childDirName;
 		var dir = initDir(parentDirName);
 
-		var childFileSystemPath = path.join(fileSystemPath, childDirName);
-		var childGetConfigPath = path.join(childFileSystemPath, 'get.js');
-		var parentDirConfigPath = path.join(fileSystemPath, 'route.js');
-
-		// Mock out directories.
+		var childDirName = 'child';
 		mockFileMgr.getDirectories = function (dirPath) {
-			if (dirPath === fileSystemPath) {
+			if (dirPath === parentDirName) {
 				return [ childDirName ];
 			}
 			else {
@@ -415,8 +385,9 @@ describe('route_init', function () {
 			}
 		};
 
+		var childGetConfigPath = path.join(parentDirName, childDirName, 'get.js');
+		var parentDirConfigPath = path.join(parentDirName, 'route.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === childGetConfigPath || 
 				   filePath === parentDirConfigPath;
 		};
@@ -448,9 +419,6 @@ describe('route_init', function () {
 
 		var dirName = 'child';
 		var parentDirName = 'parent';
-		var fileSystemPath = path.join(parentDirName, dirName);
-		var parentRoutePath = '/' + parentDirName;
-		var expectedRoutePath = parentRoutePath + dirName;
 		var dir = initDir(dirName, parentDirName, {
 			config: {
 					userConfig: {
@@ -459,10 +427,8 @@ describe('route_init', function () {
 				},			
 		});
 
-		var getConfigPath = path.join(fileSystemPath, 'get.js');
-
+		var getConfigPath = path.join(parentDirName, dirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === getConfigPath;
 		};
 
@@ -487,9 +453,6 @@ describe('route_init', function () {
 
 		var childDirName = 'child';
 		var parentDirName = 'parent';
-		var fileSystemPath = parentDirName;
-		var parentRoutePath = '/' + parentDirName;
-		var expectedRoutePath = parentRoutePath + '/' + childDirName;
 		var dir = initDir(childDirName, parentDirName, {
 			config: {
 					userConfig: {
@@ -498,21 +461,8 @@ describe('route_init', function () {
 				},			
 		});
 
-		var childFileSystemPath = path.join(fileSystemPath, childDirName);
-		var childGetConfigPath = path.join(childFileSystemPath, 'get.js');
-
-		// Mock out directories.
-		mockFileMgr.getDirectories = function (dirPath) {
-			if (dirPath === fileSystemPath) {
-				return [ childDirName ];
-			}
-			else {
-				return [];
-			}
-		};
-
+		var childGetConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		mockFileMgr.fileExists = function (filePath) {
-			// Return true to fake that our test file exists.
 			return filePath === childGetConfigPath;
 		};
 
