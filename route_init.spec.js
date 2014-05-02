@@ -81,6 +81,7 @@ describe('route_init', function () {
 		mockery.disable();
 	});
 
+	// Helper: Create a directory to pass into route init.
 	var initDir = function (childDirName, parentPath, parent) {
 		parentPath = parentPath || "";
 		if (arguments.length < 3) {
@@ -98,6 +99,17 @@ describe('route_init', function () {
 		};
 	};
 
+	// Helper: Create a mock user-get-config.
+	var initMockGetConfig = function (path) {
+		var mockGetConfig = {
+			handler: jasmine.createSpy(),
+		};
+		
+		registerRequireMock(testObject._formatPathForRequire(path), mockGetConfig);
+
+		return mockGetConfig;
+	};
+
 	it('directory with get.js registers for HTTP get', function () {
 
 		var parentDirName = 'parent';
@@ -109,8 +121,7 @@ describe('route_init', function () {
 			return filePath === getConfigPath;
 		};
 
-		var mockGetConfig = {};
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -140,11 +151,7 @@ describe('route_init', function () {
 			return filePath === getConfigPath;
 		};
 
-		var mockGetConfig = {
-			handler: jasmine.createSpy(),
-		};
-		
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -178,8 +185,7 @@ describe('route_init', function () {
 			return filePath === getConfigPath;
 		};
 
-		var mockGetConfig = {};
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -207,10 +213,7 @@ describe('route_init', function () {
 			return filePath === getConfigPath;
 		};
 
-		var mockGetConfig = {
-			handler: jasmine.createSpy(),
-		};
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -237,8 +240,7 @@ describe('route_init', function () {
                    filePath === dirConfigPath;
         };
 
-        var mockGetConfig = {};
-        registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
         var customizedRouteName = 'customized-route';
         var mockDirConfig = {
@@ -265,8 +267,7 @@ describe('route_init', function () {
                    filePath === dirConfigPath;
         };
 
-        var mockGetConfig = {};
-        registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
         var mockDirConfig = {};
         registerRequireMock(testObject._formatPathForRequire(dirConfigPath), mockDirConfig);
@@ -287,8 +288,7 @@ describe('route_init', function () {
 			return filePath === getConfigPath;
 		};
 
-		var mockGetConfig = {};
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -308,8 +308,7 @@ describe('route_init', function () {
                    filePath === dirConfigPath;
 		};
 
-		var mockGetConfig = {};
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		var customizedRoute = 'customized';
         var mockDirConfig = {
@@ -336,11 +335,7 @@ describe('route_init', function () {
 				   filePath === dirConfigPath;
 		};
 
-		var mockGetConfig = {
-			handler: jasmine.createSpy(),
-		};
-		
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		var mockDirConfig = {
 			openRoute: jasmine.createSpy(),
@@ -382,10 +377,7 @@ describe('route_init', function () {
 				   filePath === parentDirConfigPath;
 		};
 
-		var mockGetConfig = {
-			handler: jasmine.createSpy(),
-		};
-		registerRequireMock(testObject._formatPathForRequire(childGetConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(childGetConfigPath);
 
 		var mockDirConfig = {
 			openRoute: jasmine.createSpy(),
@@ -422,10 +414,7 @@ describe('route_init', function () {
 			return filePath === getConfigPath;
 		};
 
-		var mockGetConfig = {
-			handler: jasmine.createSpy(),
-		};
-		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
 
@@ -456,10 +445,7 @@ describe('route_init', function () {
 			return filePath === childGetConfigPath;
 		};
 
-		var mockGetConfig = {
-			handler: jasmine.createSpy(),
-		};
-		registerRequireMock(testObject._formatPathForRequire(childGetConfigPath), mockGetConfig);
+		var mockGetConfig = initMockGetConfig(childGetConfigPath);
 
 		testObject._processDirectory(dir);
 
