@@ -37,7 +37,6 @@ module.exports = function (config, app) {
         name: path.basename(config.routeConfigPath),
         path: config.routeConfigPath,
         parentRoute: parentRoute,
-        isRoot: true,
         config: {},
         parent: null,
     };

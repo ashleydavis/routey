@@ -76,7 +76,6 @@ describe('routey', function () {
 			name: childDir,
 			path: fullPath,
 			parentRoute: parentRoute,
-			isRoot: true,
 			config: {},
 			parent: null,
 		});
@@ -99,7 +98,6 @@ describe('routey', function () {
 			name: childDir,
 			path: fullPath,
 			parentRoute: '/',
-			isRoot: true,
 			config: {},
 			parent: null,
 		});
