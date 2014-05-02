@@ -430,6 +430,51 @@ describe('route_init', function () {
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
+	it('route is opened', function () {
+
+		var config = {};
+		var fileSystemPath = 'parent/child';
+		var getConfigPath = path.join(fileSystemPath, 'get.js');
+		var dirConfigPath = path.join(fileSystemPath, 'route.js');
+		var dir = {
+			name: 'child',
+			path: fileSystemPath,
+			parentRoute: 'this doesnt matter here',
+			isRoot: false,
+			config: {},
+			parent: null,
+		};
+
+		mockFileMgr.fileExists = function (filePath) {
+			return filePath === getConfigPath ||
+				   filePath === dirConfigPath;
+		};
+
+		var testObject = new RouteInitializer(config, mockApp);
+
+		var mockGetConfig = {
+			handler: jasmine.createSpy(),
+		};
+		
+		registerRequireMock(testObject._formatPathForRequire(getConfigPath), mockGetConfig);
+
+		var mockDirConfig = {
+			openRoute: jasmine.createSpy(),
+		};
+		
+		registerRequireMock(testObject._formatPathForRequire(dirConfigPath), mockDirConfig);
+
+		testObject._processDirectory(dir);
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
+	});
 	it('parent route is opened when a child route is handled', function () {
 
 		var config = {};
