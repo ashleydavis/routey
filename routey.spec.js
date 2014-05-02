@@ -28,6 +28,35 @@ describe('routey', function () {
 		mockery.disable();
 	});
 
+	it('undefined config throws exception', function () {
+
+		expect(function () {
+			routey();
+			
+		}).toThrow();
+	});
+
+	it('unspecified route config path throws exception', function () {
+
+		var config = {};
+		var app = {};
+
+		expect(function () {
+			routey(config, app);
+
+		}).toThrow();
+	});
+
+	it('undefined app throws exception', function () {
+
+		var config = {};
+
+		expect(function () {
+			routey(config);
+			
+		}).toThrow();
+	});
+
 	it('external interface calls through to route init', function () {
 
 		var parentDir = 'parent';

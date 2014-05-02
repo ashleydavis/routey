@@ -12,6 +12,18 @@
 //
 module.exports = function (config, app) {
 
+    if (!config) {
+        throw new Error("config is undefined.");
+    }
+
+    if (!config.routeConfigPath) {
+        throw new Error("'routeConfigPath' must be defined on config object.");   
+    }
+
+    if (!app) {
+        throw new Error("Express app is undefined.")
+    }
+
 	var path = require('path');
 	var RouteInitalizer = require('./route_init');
 
