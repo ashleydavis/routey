@@ -35,14 +35,27 @@ module.exports = function RouteInitalizer(config, app) {
 	};
 
 	//
+	// Open the requested route.
+	//
+	this._openRoute = function (dir, req, res) {
+
+		if (dir.parent) {
+			this._openRoute(dir.parent, req, res);
+		}
+
+		if (dir.config.userConfig && 
+			dir.config.userConfig.openRoute) {
+			dir.config.userConfig.openRoute(req, res);
+		}
+	};
+
+	//
 	// Generic route handler.
 	//
 	this._handleRoute = function (dir, routeConfig, req, res) {
 
-		if (dir.parent &&
-			dir.parent.config.userConfig && 
-			dir.parent.config.userConfig.openRoute) {
-			dir.parent.config.userConfig.openRoute(req, res);
+		if (dir.parent) {
+			this._openRoute(dir.parent, req, res);
 		}
 
 		routeConfig.handler(req, res);
