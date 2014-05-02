@@ -40,15 +40,37 @@ module.exports = function RouteInitalizer(config, app) {
 	//
 	this._processDirectory = function (dir) {
 
-		var route = this._formatPathAsRoute(path.join(dir.parentRoute, dir.name));
+		// Default the sub-route for the directory to the name of the file
+		// system directory.
+		var subRouteName = dir.name;
 
-		// If the directory contains a 'get.js' load it is as a route config.
-		var getJsPath = path.join(dir.path, 'get.js');
-		if (fileMgr.fileExists(getJsPath)) {
+		// If the directory has a 'route.js' load it as a route config for the directory.
+		var dirConfigPath = path.join(dir.path, 'route.js');
+		if (fileMgr.fileExists(dirConfigPath)) {
 			
-			// Require in the user-defined route config.
-			var getConfig = require(this._formatPathForRequire(getJsPath));
+			// Require in the user-defined directory config.
+			var dirConfig = require(this._formatPathForRequire(dirConfigPath));
 
+			console.log('dir config: ');
+
+			logVerbose('Loaded dir config: ' + dirConfigPath);
+
+			if (dirConfig.route) {
+				// Retreive the route name from the directory config, if it is specified.
+				subRouteName = dirConfig.route;
+			}
+		}
+
+		var route = this._formatPathAsRoute(path.join(dir.parentRoute, subRouteName));
+
+		// If the directory contains a 'get.js' load it is as config for HTTP get.
+		var getConfigPath = path.join(dir.path, 'get.js');
+		if (fileMgr.fileExists(getConfigPath)) {
+			
+			// Require in the user-defined HTTP get config.
+			var getConfig = require(this._formatPathForRequire(getConfigPath));
+
+			logVerbose('Loaded HTTP get config: ' + getConfigPath);
 			logVerbose('Registering route: ' + route);
 
 			app.get(route, function (req, res) {
