@@ -37,7 +37,13 @@ module.exports = function RouteInitalizer(config, app) {
 	//
 	// Generic route handler.
 	//
-	this._handleRoute = function (routeConfig, req, res) {
+	this._handleRoute = function (dir, routeConfig, req, res) {
+
+		if (dir.parent &&
+			dir.parent.config.userConfig && 
+			dir.parent.config.userConfig.openRoute) {
+			dir.parent.config.userConfig.openRoute(req, res);
+		}
 
 		routeConfig.handler(req, res);
 	};
@@ -52,19 +58,21 @@ module.exports = function RouteInitalizer(config, app) {
 		// But only for sub-directories, not for the root rest directory.
 		//
 		var subRouteName = dir.isRoot ? "" : dir.name;
+		dir.config = {};
 
 		// If the directory has a 'route.js' load it as a route config for the directory.
 		var dirConfigPath = path.join(dir.path, 'route.js');
 		if (fileMgr.fileExists(dirConfigPath)) {
-			
+		
 			// Require in the user-defined directory config.
-			var dirConfig = require(this._formatPathForRequire(dirConfigPath));
+			dir.config.userConfig = require(this._formatPathForRequire(dirConfigPath));
 
-			logVerbose('Loaded dir config: ' + dirConfigPath);
+			logVerbose('Loaded dir config: ');
+			logVerbose(dir.config.userConfig);
 
-			if (dirConfig.route) {
+			if (dir.config.userConfig.route) {
 				// Retreive the route name from the directory config, if it is specified.
-				subRouteName = dirConfig.route;
+				subRouteName = dir.config.userConfig.route;
 			}
 		}
 
@@ -85,7 +93,7 @@ module.exports = function RouteInitalizer(config, app) {
 			app.get(route, function (req, res) {
 
 				// User-defined code handles the route.
-				that._handleRoute(getConfig, req, res);				
+				that._handleRoute(dir, getConfig, req, res);				
 			});
 		}
 
@@ -99,6 +107,7 @@ module.exports = function RouteInitalizer(config, app) {
 					path: path.join(dir.path, subDirName),
 					parentRoute: route,
 					isRoot: false,
+					parent: dir,
 				});
 			});
 	};
