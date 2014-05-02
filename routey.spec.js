@@ -73,7 +73,7 @@ describe('routey', function () {
 		expect(mockRouteyInit._processDirectory).toHaveBeenCalledWith({
 			name: childDir,
 			path: fullPath,
-			routePath: '/',
+			parentRoute: '/',
 		});
 	});
 

@@ -32,7 +32,7 @@ module.exports = function (config, app) {
 	var routeConfigDir = {
         name: path.basename(config.routeConfigPath),
         path: config.routeConfigPath,
-        routePath: '/',
+        parentRoute: '/',
     };
 
     routeInitalizer._processDirectory(routeConfigDir);
