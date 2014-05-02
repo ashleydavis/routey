@@ -34,6 +34,13 @@ module.exports = function RouteInitalizer(config, app) {
 		return path.replace(/\\/g,"/");
 	};
 
+	//
+	// Generic route handler.
+	//
+	this._handleRoute = function (routeConfig, req, res) {
+
+		routeConfig.handler(req, res);
+	};
 
 	//
 	// Process a directory and configure routes that it defines.
@@ -78,7 +85,7 @@ module.exports = function RouteInitalizer(config, app) {
 			app.get(route, function (req, res) {
 
 				// User-defined code handles the route.
-				getConfig.handler(req, res);
+				that._handleRoute(getConfig, req, res);				
 			});
 		}
 
