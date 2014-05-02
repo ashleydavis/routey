@@ -111,6 +111,8 @@ describe('route_init', function () {
 
 	// Helper: Create a mock user-get-config.
 	var initMockGetConfig = function (path) {
+		filesThatExist.push(path);
+
 		var mockGetConfig = {
 			handler: jasmine.createSpy(),
 		};
@@ -127,8 +129,6 @@ describe('route_init', function () {
 		var dir = initDir(childDirName, parentDirName);
 
 		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-		filesThatExist.push(getConfigPath);
-
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
@@ -155,8 +155,6 @@ describe('route_init', function () {
 		var dir = initDir(childDirName, parentDirName);
 
 		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-		filesThatExist.push(getConfigPath);
-
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
@@ -187,8 +185,6 @@ describe('route_init', function () {
 		};
 
 		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-		filesThatExist.push(getConfigPath);
-
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
@@ -213,8 +209,6 @@ describe('route_init', function () {
 		};
 
 		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-		filesThatExist.push(getConfigPath);
-
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
@@ -235,12 +229,10 @@ describe('route_init', function () {
         var childDirName = 'child';
 		var dir = initDir(childDirName, parentDirName);
 
-        var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-        filesThatExist.push(getConfigPath);
-
         var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
         filesThatExist.push(dirConfigPath);
 
+        var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
         var customizedRouteName = 'customized-route';
@@ -261,12 +253,10 @@ describe('route_init', function () {
         var childDirName = 'child';
         var dir = initDir(childDirName, parentDirName);
 
-        var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-        filesThatExist.push(getConfigPath);
-
         var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
         filesThatExist.push(dirConfigPath);
 
+        var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
         var mockDirConfig = {};
@@ -284,8 +274,6 @@ describe('route_init', function () {
         var dir = initDir(rootDirName, "", null);
 
 		var getConfigPath = path.join(rootDirName, 'get.js');
-        filesThatExist.push(getConfigPath);
-
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
@@ -299,12 +287,10 @@ describe('route_init', function () {
 		var rootDirName = 'root';
         var dir = initDir(rootDirName, "", null);
 
-		var getConfigPath = path.join(rootDirName, 'get.js');
-        filesThatExist.push(getConfigPath);
-
 		var dirConfigPath = path.join(rootDirName, 'route.js');
         filesThatExist.push(dirConfigPath);
 
+		var getConfigPath = path.join(rootDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		var customizedRoute = 'customized';
@@ -325,12 +311,10 @@ describe('route_init', function () {
 		var parentDirName = 'parent';
 		var dir = initDir(childDirName, parentDirName);
 
-		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
-        filesThatExist.push(getConfigPath);
-		
 		var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
         filesThatExist.push(dirConfigPath);
 
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		var mockDirConfig = {
@@ -367,7 +351,6 @@ describe('route_init', function () {
 		};
 
 		var childGetConfigPath = path.join(parentDirName, childDirName, 'get.js');
-        filesThatExist.push(childGetConfigPath);
 		var parentDirConfigPath = path.join(parentDirName, 'route.js');
         filesThatExist.push(parentDirConfigPath);
 
@@ -404,8 +387,6 @@ describe('route_init', function () {
 		});
 
 		var getConfigPath = path.join(parentDirName, dirName, 'get.js');
-        filesThatExist.push(getConfigPath);
-
 		var mockGetConfig = initMockGetConfig(getConfigPath);
 
 		testObject._processDirectory(dir);
@@ -433,8 +414,6 @@ describe('route_init', function () {
 		});
 
 		var childGetConfigPath = path.join(parentDirName, childDirName, 'get.js');
-        filesThatExist.push(childGetConfigPath);
-
 		var mockGetConfig = initMockGetConfig(childGetConfigPath);
 
 		testObject._processDirectory(dir);
