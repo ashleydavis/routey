@@ -137,11 +137,10 @@ describe('route_init', function () {
 	it('directory with get.js registers for HTTP get', function () {
 
 		var dirName = 'child';
-		var dir = initDir(dirName);
 
 		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
 
-		testObject._processDirectory(dir);
+		testObject._processDirectory(initDir(dirName));
 
 		var expectedRoutePath = '/' + dirName;
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
@@ -149,10 +148,7 @@ describe('route_init', function () {
 
 	it('directory without get.js does not register for HTTP get', function () {
 
-		var dirName = 'child';
-		var dir = initDir(dirName);
-
-		testObject._processDirectory(dir);
+		testObject._processDirectory(initDir('child'));
 
 		expect(mockApp.get).not.toHaveBeenCalled();
 	});
