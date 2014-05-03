@@ -178,7 +178,7 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockGetConfig.handler).toHaveBeenCalledWith(mockReq, mockRes)
+		expect(mockGetConfig.handler).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
 	});
 
 	it('sub-directory with get.js registers for HTTP get', function () {
@@ -232,7 +232,7 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockGetConfig.handler).toHaveBeenCalledWith(mockReq, mockRes)
+		expect(mockGetConfig.handler).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
 	});	
 
     it('directory with route.js can customize its route', function () {

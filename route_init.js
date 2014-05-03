@@ -56,7 +56,9 @@ module.exports = function RouteInitalizer(config, app) {
 
 		this._openRoute(dir, req, res);
 
-		routeConfig.handler(req, res);
+		routeConfig.handler(req, res, function () {
+
+		});
 	};
 
 	//
