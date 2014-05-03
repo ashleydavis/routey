@@ -45,7 +45,9 @@ module.exports = function RouteInitalizer(config, app) {
 
 		if (dir.config.userConfig && 
 			dir.config.userConfig.openRoute) {
-			dir.config.userConfig.openRoute(req, res);
+			dir.config.userConfig.openRoute(req, res, function () {
+				//todo: call done for this fn
+			});
 		}
 	};
 
@@ -57,7 +59,7 @@ module.exports = function RouteInitalizer(config, app) {
 		this._openRoute(dir, req, res);
 
 		routeConfig.handler(req, res, function () {
-
+			//todo: close route.
 		});
 	};
 

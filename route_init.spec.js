@@ -329,7 +329,7 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
+		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function));
 	});
 
 	it('parent route is opened when a child route is handled', function () {
@@ -362,7 +362,7 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
+		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
 	});	
 
 	it('fully mocked parent is opened when a child route is handled', function () {
@@ -389,7 +389,7 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(dir.parent.config.userConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
+		expect(dir.parent.config.userConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
 	});	
 
 	it('parent of parent is opened when a route is handled', function () {
@@ -416,7 +416,7 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(dir.parent.config.userConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes)
+		expect(dir.parent.config.userConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
 	});	
 
 });
