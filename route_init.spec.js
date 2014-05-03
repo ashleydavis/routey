@@ -137,7 +137,7 @@ describe('route_init', function () {
 	it('directory with get.js registers for HTTP get', function () {
 
 		var dirName = 'child';
-		var dir = initDir(childDirName);
+		var dir = initDir(dirName);
 
 		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
 
@@ -149,9 +149,8 @@ describe('route_init', function () {
 
 	it('directory without get.js does not register for HTTP get', function () {
 
-		var parentDirName = 'parent';
-		var childDirName = 'child';
-		var dir = initDir(childDirName, parentDirName);
+		var dirName = 'child';
+		var dir = initDir(dirName);
 
 		testObject._processDirectory(dir);
 
