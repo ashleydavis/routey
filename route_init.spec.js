@@ -178,7 +178,8 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockGetConfig.handler).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
+		expect(mockGetConfig.handler)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});
 
 	it('sub-directory with get.js registers for HTTP get', function () {
@@ -232,7 +233,8 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockGetConfig.handler).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
+		expect(mockGetConfig.handler)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
     it('directory with route.js can customize its route', function () {
@@ -329,7 +331,8 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function));
+		expect(mockDirConfig.openRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function));
 	});
 
 	it('parent route is opened when a child route is handled', function () {
@@ -362,7 +365,8 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(mockDirConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
+		expect(mockDirConfig.openRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
 	it('fully mocked parent is opened when a child route is handled', function () {
@@ -389,7 +393,8 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(dir.parent.config.userConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
+		expect(dir.parent.config.userConfig.openRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
 	it('parent of parent is opened when a route is handled', function () {
@@ -416,7 +421,72 @@ describe('route_init', function () {
 		var mockRes = {};
 		handler(mockReq, mockRes);
 
-		expect(dir.parent.config.userConfig.openRoute).toHaveBeenCalledWith(mockReq, mockRes, jasmine.any(Function))
+		expect(dir.parent.config.userConfig.openRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
+	it('parameters from route open are passed to route handler', function () {
+
+		var childDirName = 'child';
+		var parentDirName = 'parent';
+		var dir = initDir(childDirName, parentDirName);
+
+		var getConfigPath = path.join(parentDirName, childDirName, 'get.js');
+		var mockGetConfig = initMockGetConfig(getConfigPath);
+
+		var dirConfigPath = path.join(parentDirName, childDirName, 'route.js');
+        var mockDirConfig = initMockDirConfig(dirConfigPath);
+
+        var mockParams = {};
+
+        mockDirConfig.openRoute = function (req, res, params, done)  {
+        	done(mockParams);
+        };
+
+		testObject._processDirectory(dir);
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockGetConfig.handler)
+			.toHaveBeenCalledWith(mockReq, mockRes, mockParams, jasmine.any(Function));
+	});
+
+	it('parameters are passed to child route opener', function () {
+
+		var childDirName = 'child';
+		var parentDirName = 'parent';
+		var mockParams = {};
+		var dir = initDir(childDirName, parentDirName, {
+			config: {
+					userConfig: {
+						openRoute: function (req, res, params, done) {
+							done(mockParams);
+						},
+					},
+				},			
+		});
+
+		var childDirConfigPath = path.join(parentDirName, childDirName, 'route.js');
+		var mockDirConfig = initMockDirConfig(childDirConfigPath);
+
+		var childGetConfigPath = path.join(parentDirName, childDirName, 'get.js');
+		var mockGetConfig = initMockGetConfig(childGetConfigPath);
+
+		testObject._processDirectory(dir);
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockDirConfig.openRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, mockParams, jasmine.any(Function))
+	});	
 });

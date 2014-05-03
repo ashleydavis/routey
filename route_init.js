@@ -36,18 +36,33 @@ module.exports = function RouteInitalizer(config, app) {
 
 	//
 	// Open the requested route.
+	// This is a recursive function that opens parent routes.
 	//
-	this._openRoute = function (dir, req, res) {
+	this._openRoute = function (dir, req, res, routeOpenDone) {
 
-		if (dir.parent) {
-			this._openRoute(dir.parent, req, res);
+		//
+		// Actually open this route (probably after parent route has been opened).
+		//
+		var openThisRoute = function (params) {
+
+			if (dir.config.userConfig && 
+				dir.config.userConfig.openRoute) {
+				// Invoke user-defined open route callback.
+				dir.config.userConfig.openRoute(req, res, params, routeOpenDone);
+			}
+			else {
+				// No callback, just complete route opening.
+				routeOpenDone(params);
+			}
 		}
 
-		if (dir.config.userConfig && 
-			dir.config.userConfig.openRoute) {
-			dir.config.userConfig.openRoute(req, res, function () {
-				//todo: call done for this fn
-			});
+		if (dir.parent) {
+			// Open the parent route.
+			this._openRoute(dir.parent, req, res, openThisRoute);
+		}
+		else {
+			// No parent, just open this route.
+			openThisRoute({});
 		}
 	};
 
@@ -56,11 +71,19 @@ module.exports = function RouteInitalizer(config, app) {
 	//
 	this._handleRoute = function (dir, routeConfig, req, res) {
 
-		this._openRoute(dir, req, res);
+		//
+		// When the route has been opened, invoke the route handler.
+		//
+		var routeOpened = function (params) {
+			routeConfig.handler(req, res, params, function () {
+				//todo: close route.
+			});
+		};
 
-		routeConfig.handler(req, res, function () {
-			//todo: close route.
-		});
+		//
+		// Open the route and then invoke the route handler.
+		//
+		this._openRoute(dir, req, res, routeOpened);
 	};
 
 	//
