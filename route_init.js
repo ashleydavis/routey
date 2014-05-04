@@ -165,6 +165,7 @@ module.exports = function RouteInitalizer(config, app) {
 		logVerbose('Directory route: ' + route);
 
 		this._checkForHttpVerb(dir, route, 'get');
+		this._checkForHttpVerb(dir, route, 'post');
 
 		// Recursively process sub directories.
 		fileMgr

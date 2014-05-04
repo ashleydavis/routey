@@ -74,6 +74,7 @@ describe('route_init', function () {
 
 		mockApp = {
 			get: jasmine.createSpy(),
+			post: jasmine.createSpy(),
 		};
 
 		registerRequireMock('./fileMgr', mockFileMgr);
@@ -154,8 +155,7 @@ describe('route_init', function () {
 	it('directory with get.js registers for HTTP get', function () {
 
 		var dirName = 'child';
-
-		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
+		initMockGetConfig(path.join(dirName, 'get.js'));
 
 		testObject._processDirectory(initDir(dirName));
 
@@ -168,6 +168,17 @@ describe('route_init', function () {
 		testObject._processDirectory(initDir('child'));
 
 		expect(mockApp.get).not.toHaveBeenCalled();
+	});
+
+	it('directory with post.js registers for HTTP post', function () {
+
+		var dirName = 'child';
+		initMockGetConfig(path.join(dirName, 'post.js'));
+
+		testObject._processDirectory(initDir(dirName));
+
+		var expectedRoutePath = '/' + dirName;
+		expect(mockApp.post).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
 	it('when get.js exists, it is loaded to handle a route', function () {
