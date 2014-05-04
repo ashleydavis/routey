@@ -264,7 +264,7 @@ describe('route_init', function () {
 		expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
-	it('route is opened', function () {
+	it('route is opened when handled', function () {
 
 		var childDirName = 'child';
 		var mockGetConfig = initMockGetConfig(path.join(childDirName, 'get.js'));
@@ -305,11 +305,10 @@ describe('route_init', function () {
 			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
-	it('fully mocked parent is opened when a child route is handled', function () {
+	it('mocked parent is opened when a child route is handled', function () {
 
 		var dirName = 'child';
-		var parentDirName = 'parent';
-		var mockGetConfig = initMockGetConfig(path.join(parentDirName, dirName, 'get.js'));
+		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
 
 		var parent = {
 			config: {
@@ -319,7 +318,7 @@ describe('route_init', function () {
 				},			
 		};
 
-		testObject._processDirectory(initDir(dirName, parentDirName, parent));
+		testObject._processDirectory(initDir(dirName, "", parent));
 
 		var handler = mockApp.get.mostRecentCall.args[1];
 
