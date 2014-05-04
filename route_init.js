@@ -57,13 +57,36 @@ module.exports = function RouteInitalizer(config, app) {
 		}
 
 		if (dir.parent) {
-			// Open the parent route.
+			// Open the parent route, then async open this route.
 			this._openRoute(dir.parent, req, res, openThisRoute);
 		}
 		else {
-			// No parent, just open this route.
+			// No parent, directly open this route.
 			openThisRoute({});
 		}
+	};
+
+	//
+	// Closes a route after handling.
+	//
+	this._closeRoute = function (dir, req, res, params) {
+
+		if (dir.config.userConfig &&
+			dir.config.userConfig.closeRoute) {
+
+			dir.config.userConfig.closeRoute(req, res, params, function (params)  {
+				if (dir.parent) {
+					// Async close parent routes.
+					that._closeRoute(dir.parent, req, res, params);
+				}
+			});
+		}
+		else {
+			if (dir.parent) {
+				// Close parent routes.
+				that._closeRoute(dir.parent, req, res, params);
+			}
+		}			
 	};
 
 	//
@@ -76,7 +99,7 @@ module.exports = function RouteInitalizer(config, app) {
 		//
 		var routeOpened = function (params) {
 			routeConfig.handler(req, res, params, function () {
-				//todo: close route.
+				that._closeRoute(dir, req, res, params);
 			});
 		};
 

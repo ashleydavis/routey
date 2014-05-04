@@ -117,8 +117,12 @@ describe('route_init', function () {
 		filesThatExist.push(path);
 
 		var mockGetConfig = {
-			handler: jasmine.createSpy(),
+			handler: function (req, res, params, done) {
+				done(params);
+			},
 		};
+
+		spyOn(mockGetConfig, 'handler').andCallThrough();
 		
 		registerRequireMock(testObject._formatPathForRequire(path), mockGetConfig);
 
@@ -128,8 +132,18 @@ describe('route_init', function () {
 	// Helper: Create a mock user-dir-config.	
 	var initMockDirConfig = function (path) {
 		var mockDirConfig = {
-			openRoute: jasmine.createSpy(),
+			openRoute: function (req, res, params, done) {
+				done(params);
+			},
+			
+			closeRoute: function (req, res, params, done) {
+				done(params);
+			},
 		};
+
+		spyOn(mockDirConfig, 'openRoute').andCallThrough();
+		spyOn(mockDirConfig, 'closeRoute').andCallThrough();
+
 		registerRequireMock(testObject._formatPathForRequire(path), mockDirConfig);
 
 		filesThatExist.push(path);
@@ -385,4 +399,88 @@ describe('route_init', function () {
 		expect(mockDirConfig.openRoute)
 			.toHaveBeenCalledWith(mockReq, mockRes, mockParams, jasmine.any(Function))
 	});	
+
+	it('route is closed after being handled', function () {
+
+		var childDirName = 'child';
+		var mockGetConfig = initMockGetConfig(path.join(childDirName, 'get.js'));
+        var mockDirConfig = initMockDirConfig(path.join(childDirName, 'route.js'));
+
+		testObject._processDirectory(initDir(childDirName));
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockDirConfig.closeRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function));
+	});	
+
+	it('parent route is closed after being handled', function () {
+
+		var childDirName = 'child';
+		var mockGetConfig = initMockGetConfig(path.join(childDirName, 'get.js'));
+        var mockDirConfig = initMockDirConfig(path.join(childDirName, 'route.js'));
+
+		var mockParams = {};
+
+        var parent = {
+        	config: {
+        		userConfig: {
+					openRoute: function (req, res, params, done) {
+						done(mockParams);
+					},
+
+        			closeRoute: jasmine.createSpy(),
+        		},
+        	},
+        };
+
+		testObject._processDirectory(initDir(childDirName, "", parent));
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(parent.config.userConfig.closeRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, mockParams, jasmine.any(Function));
+	});		
+
+	it('params defined by parent are passed to route closer', function () {
+
+		var childDirName = 'child';
+		var mockGetConfig = initMockGetConfig(path.join(childDirName, 'get.js'));
+        var mockDirConfig = initMockDirConfig(path.join(childDirName, 'route.js'));
+
+		var mockParams = {};
+
+        var parent = {
+        	config: {
+        		userConfig: {
+					closeRoute: function (req, res, params, done) {
+						done(mockParams);
+					},
+        		},
+        	},
+        };
+
+		testObject._processDirectory(initDir(childDirName, "", parent));
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockDirConfig.closeRoute)
+			.toHaveBeenCalledWith(mockReq, mockRes, mockParams, jasmine.any(Function));
+	});			
+
 });
