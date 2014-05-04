@@ -267,11 +267,10 @@ describe('route_init', function () {
 	it('route is opened', function () {
 
 		var childDirName = 'child';
-		var parentDirName = 'parent';
-		var mockGetConfig = initMockGetConfig(path.join(parentDirName, childDirName, 'get.js'));
-        var mockDirConfig = initMockDirConfig(path.join(parentDirName, childDirName, 'route.js'));
+		var mockGetConfig = initMockGetConfig(path.join(childDirName, 'get.js'));
+        var mockDirConfig = initMockDirConfig(path.join(childDirName, 'route.js'));
 
-		testObject._processDirectory(initDir(childDirName, parentDirName));
+		testObject._processDirectory(initDir(childDirName));
 
 		var handler = mockApp.get.mostRecentCall.args[1];
 
