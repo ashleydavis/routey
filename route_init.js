@@ -136,6 +136,8 @@ module.exports = function RouteInitalizer(config, app) {
 	var httpVerbs = [
 		'get',
 		'post',
+		'put',
+		'delete',
 	];
 
 	//

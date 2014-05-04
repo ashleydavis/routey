@@ -75,6 +75,8 @@ describe('route_init', function () {
 		mockApp = {
 			get: jasmine.createSpy(),
 			post: jasmine.createSpy(),
+			put: jasmine.createSpy(),
+			delete: jasmine.createSpy(),
 		};
 
 		registerRequireMock('./fileMgr', mockFileMgr);
@@ -179,6 +181,28 @@ describe('route_init', function () {
 
 		var expectedRoutePath = '/' + dirName;
 		expect(mockApp.post).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
+	});
+
+	it('directory with put.js registers for HTTP put', function () {
+
+		var dirName = 'child';
+		initMockGetConfig(path.join(dirName, 'put.js'));
+
+		testObject._processDirectory(initDir(dirName));
+
+		var expectedRoutePath = '/' + dirName;
+		expect(mockApp.put).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
+	});
+
+	it('directory with delete.js registers for HTTP delete', function () {
+
+		var dirName = 'child';
+		initMockGetConfig(path.join(dirName, 'delete.js'));
+
+		testObject._processDirectory(initDir(dirName));
+
+		var expectedRoutePath = '/' + dirName;
+		expect(mockApp.delete).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
 	it('when get.js exists, it is loaded to handle a route', function () {
