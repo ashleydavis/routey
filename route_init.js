@@ -133,6 +133,11 @@ module.exports = function RouteInitalizer(config, app) {
 		}
 	};
 
+	var httpVerbs = [
+		'get',
+		'post',
+	];
+
 	//
 	// Process a directory and configure routes that it defines.
 	//
@@ -164,8 +169,9 @@ module.exports = function RouteInitalizer(config, app) {
 
 		logVerbose('Directory route: ' + route);
 
-		this._checkForHttpVerb(dir, route, 'get');
-		this._checkForHttpVerb(dir, route, 'post');
+		httpVerbs.forEach(function (verb) {
+			that._checkForHttpVerb(dir, route, verb);
+		})
 
 		// Recursively process sub directories.
 		fileMgr
