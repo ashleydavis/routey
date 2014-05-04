@@ -331,33 +331,6 @@ describe('route_init', function () {
 			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
-	it('parent of parent is opened when a route is handled', function () {
-
-		var childDirName = 'child';
-		var parentDirName = 'parent';
-		var mockGetConfig = initMockGetConfig(path.join(parentDirName, childDirName, 'get.js'));
-
-		var parent = {
-			config: {
-				userConfig: {
-					openRoute: jasmine.createSpy(),
-				},
-			},			
-		};
-
-		testObject._processDirectory(initDir(childDirName, parentDirName, parent));
-
-		var handler = mockApp.get.mostRecentCall.args[1];
-
-		// Simulate a request.
-		var mockReq = {};
-		var mockRes = {};
-		handler(mockReq, mockRes);
-
-		expect(parent.config.userConfig.openRoute)
-			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
-	});	
-
 	it('parameters from route open are passed to route handler', function () {
 
 		var childDirName = 'child';
