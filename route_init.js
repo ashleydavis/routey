@@ -110,6 +110,30 @@ module.exports = function RouteInitalizer(config, app) {
 	};
 
 	//
+	// Check for a config file in the directory that defines one of the HTTP verbs.
+	// Eg check for get.js to defined a route for HTTP get.
+	//
+	this._checkForHttpVerb = function (dir, route, verb) {
+
+		// If the directory contains a 'get.js' load it is as config for HTTP get.
+		var verbConfigPath = path.join(dir.path, verb + '.js');
+		if (fileMgr.fileExists(verbConfigPath)) {
+			
+			// Require in the user-defined HTTP get config.
+			var verbConfig = require(this._formatPathForRequire(verbConfigPath));
+
+			logVerbose('Loaded HTTP ' + verb + ' config: ' + verbConfigPath);
+			logVerbose('Registering route: ' + route);
+
+			app[verb](route, function (req, res) {
+
+				// User-defined code handles the route.
+				that._handleRoute(dir, verbConfig, req, res);				
+			});
+		}
+	};
+
+	//
 	// Process a directory and configure routes that it defines.
 	//
 	this._processDirectory = function (dir) {
@@ -140,22 +164,7 @@ module.exports = function RouteInitalizer(config, app) {
 
 		logVerbose('Directory route: ' + route);
 
-		// If the directory contains a 'get.js' load it is as config for HTTP get.
-		var getConfigPath = path.join(dir.path, 'get.js');
-		if (fileMgr.fileExists(getConfigPath)) {
-			
-			// Require in the user-defined HTTP get config.
-			var getConfig = require(this._formatPathForRequire(getConfigPath));
-
-			logVerbose('Loaded HTTP get config: ' + getConfigPath);
-			logVerbose('Registering route: ' + route);
-
-			app.get(route, function (req, res) {
-
-				// User-defined code handles the route.
-				that._handleRoute(dir, getConfig, req, res);				
-			});
-		}
+		this._checkForHttpVerb(dir, route, 'get');
 
 		// Recursively process sub directories.
 		fileMgr
