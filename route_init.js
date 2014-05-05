@@ -123,7 +123,7 @@ module.exports = function RouteInitalizer(config, app) {
 			var verbConfig = require(this._formatPathForRequire(verbConfigPath));
 
 			logVerbose('Loaded HTTP ' + verb + ' config: ' + verbConfigPath);
-			logVerbose('Registering route: ' + route);
+			logVerbose('Registering ' + verb + ' route: ' + route);
 
 			app[verb](route, function (req, res) {
 
