@@ -63,10 +63,12 @@ describe('routey', function () {
 		var childDir = 'child';
 		var fullPath = parentDir + '/' + childDir;
 		var parentRoute = '/myparent';
+		var handlerParams = {};
 
 		var config = {
 			routeConfigPath: fullPath,
 			parentRoute: parentRoute,
+			handlerParams: handlerParams,
 		};
 		var app = {};
 
@@ -78,6 +80,7 @@ describe('routey', function () {
 			parentRoute: parentRoute,
 			config: {},
 			parent: null,
+			handlerParams: handlerParams,
 		});
 	});
 
@@ -100,6 +103,7 @@ describe('routey', function () {
 			parentRoute: '/',
 			config: {},
 			parent: null,
+			handlerParams: {},
 		});
 	});
 });

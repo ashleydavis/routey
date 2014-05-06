@@ -62,7 +62,7 @@ module.exports = function RouteInitalizer(config, app) {
 		}
 		else {
 			// No parent, directly open this route.
-			openThisRoute({});
+			openThisRoute(config.handlerParams || {});
 		}
 	};
 

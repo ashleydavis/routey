@@ -223,6 +223,30 @@ describe('route_init', function () {
 			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});
 
+	it('handler params are passed thru to get.js handler', function () {
+
+		var handlerParams = { my: 'param' };
+		var config = {
+			handlerParams: handlerParams,
+		};
+		var testObject = new RouteInitializer(config, mockApp);
+
+		var dirName = 'child';
+		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
+
+		testObject._processDirectory(initDir(dirName));
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(mockGetConfig.handler)
+			.toHaveBeenCalledWith(mockReq, mockRes, handlerParams, jasmine.any(Function))
+	});
+
 	it('sub-directory with get.js registers for HTTP get', function () {
 
 		var parentDirName = 'parent';
