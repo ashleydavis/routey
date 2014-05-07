@@ -286,6 +286,20 @@ describe('route_init', function () {
 			.toHaveBeenCalledWith(mockReq, mockRes, {}, jasmine.any(Function))
 	});	
 
+    it('verb handlers can customize their route', function () {
+
+        var dirName = 'child';
+		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
+
+        var customizedRouteName = 'customized-route';
+        mockGetConfig.route = customizedRouteName;
+
+        testObject._processDirectory(initDir(dirName));
+
+        var expectedRoutePath = '/' + dirName + '/' + customizedRouteName;
+        expect(mockApp.get).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
+    }); 
+
     it('directory with route.js can customize its route', function () {
 
         var parentDirName = 'parent';

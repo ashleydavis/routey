@@ -125,6 +125,12 @@ module.exports = function RouteInitalizer(config, app) {
 				verbConfig = verbConfig();
 			}
 
+			if (verbConfig.route) {
+				route = path.join(route, verbConfig.route);
+			}
+
+			route = this._formatPathAsRoute(route);
+
 			logVerbose('Loaded HTTP ' + verb + ' config: ' + verbConfigPath);
 			logVerbose('Registering ' + verb + ' route: ' + route);
 
@@ -171,7 +177,7 @@ module.exports = function RouteInitalizer(config, app) {
 			}
 		}
 
-		var route = this._formatPathAsRoute(path.join(dir.parentRoute, subRouteName));
+		var route = path.join(dir.parentRoute, subRouteName);
 
 		logVerbose('Directory route: ' + route);
 
