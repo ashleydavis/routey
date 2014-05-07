@@ -121,6 +121,9 @@ module.exports = function RouteInitalizer(config, app) {
 			
 			// Require in the user-defined HTTP get config.
 			var verbConfig = require(this._formatPathForRequire(verbConfigPath));
+			if (verbConfig instanceof Function) {
+				verbConfig = verbConfig();
+			}
 
 			logVerbose('Loaded HTTP ' + verb + ' config: ' + verbConfigPath);
 			logVerbose('Registering ' + verb + ' route: ' + route);
@@ -156,7 +159,8 @@ module.exports = function RouteInitalizer(config, app) {
 		if (fileMgr.fileExists(dirConfigPath)) {
 		
 			// Require in the user-defined directory config.
-			dir.config.userConfig = require(this._formatPathForRequire(dirConfigPath));
+			var routeConfig = require(this._formatPathForRequire(dirConfigPath));
+			dir.config.userConfig = routeConfig instanceof Function ? routeConfig() : routeConfig;
 
 			logVerbose('Loaded dir config: ');
 			logVerbose(dir.config.userConfig);

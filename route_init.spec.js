@@ -127,7 +127,9 @@ describe('route_init', function () {
 
 		spyOn(mockGetConfig, 'handler').andCallThrough();
 		
-		registerRequireMock(testObject._formatPathForRequire(path), mockGetConfig);
+		registerRequireMock(testObject._formatPathForRequire(path), function () {
+			return mockGetConfig;
+		});
 
 		return mockGetConfig;
 	};
@@ -147,7 +149,9 @@ describe('route_init', function () {
 		spyOn(mockDirConfig, 'openRoute').andCallThrough();
 		spyOn(mockDirConfig, 'closeRoute').andCallThrough();
 
-		registerRequireMock(testObject._formatPathForRequire(path), mockDirConfig);
+		registerRequireMock(testObject._formatPathForRequire(path), function () {
+			return mockDirConfig;
+		});
 
 		filesThatExist.push(path);
 
