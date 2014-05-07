@@ -8,6 +8,17 @@ module.exports = function RouteInitalizer(config, app) {
 
 	var that = this;	
 
+    // Wire up the user provided logger (compatible with winston)...
+    var logger = config.logger || 
+
+    // Or just use console logging.
+    {
+        info: console.log,
+        warn: console.log,
+        error: console.log,
+        debug: console.log,
+    };
+
 	var fileMgr = require('./fileMgr');
 	var path = require('path');
 
@@ -17,7 +28,7 @@ module.exports = function RouteInitalizer(config, app) {
 			return;
 		}
 
-		console.log(msg);
+		logger.info(msg);
 	};
 
 	//
