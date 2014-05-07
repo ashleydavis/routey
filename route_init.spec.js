@@ -206,7 +206,7 @@ describe('route_init', function () {
 		testObject._processDirectory(initDir(dirName));
 
 		var expectedRoutePath = '/' + dirName;
-		expect(mockApp.del).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
+		expect(mockApp.delete).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
 	it('when get.js exists, it is loaded to handle a route', function () {
