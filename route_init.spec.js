@@ -76,7 +76,7 @@ describe('route_init', function () {
 			get: jasmine.createSpy(),
 			post: jasmine.createSpy(),
 			put: jasmine.createSpy(),
-			del: jasmine.createSpy(),
+			delete: jasmine.createSpy(),
 		};
 
 		registerRequireMock('./fileMgr', mockFileMgr);
@@ -198,10 +198,10 @@ describe('route_init', function () {
 		expect(mockApp.put).toHaveBeenCalledWith(expectedRoutePath, jasmine.any(Function));
 	});
 
-	it('directory with del.js registers for HTTP delete', function () {
+	it('directory with delete.js registers for HTTP delete', function () {
 
 		var dirName = 'child';
-		initMockGetConfig(path.join(dirName, 'del.js'));
+		initMockGetConfig(path.join(dirName, 'delete.js'));
 
 		testObject._processDirectory(initDir(dirName));
 

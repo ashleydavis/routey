@@ -157,7 +157,7 @@ module.exports = function RouteInitalizer(config, app) {
 		'get',
 		'post',
 		'put',
-		'del',
+		'delete',
 	];
 
 	//
