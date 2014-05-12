@@ -33,9 +33,11 @@ module.exports = function (config, app) {
     var defaultParentRoute = '/';
     var parentRoute = config.parentRoute || defaultParentRoute;
 
+    var fullPath = path.resolve(config.routeConfigPath);
+
 	var routeConfigDir = {
-        name: path.basename(config.routeConfigPath),
-        path: config.routeConfigPath,
+        name: path.basename(fullPath),
+        path: fullPath,
         parentRoute: parentRoute,
         config: {},
         parent: null,

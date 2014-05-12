@@ -1,10 +1,12 @@
 'use strict';
 
 var mockery = require('mockery');
+var path = require('path');
 
 describe('routey', function () {
 	var routey;
 	var mockRouteyInit;
+	var mockPath;
 
 	beforeEach(function () {
 		mockery.enable();
@@ -13,16 +15,25 @@ describe('routey', function () {
 			_processDirectory: jasmine.createSpy(),
 		};
 
+		mockPath = {
+			join: path.join,
+			basename: path.basename,
+
+			resolve: function (path) {
+				return path;
+			},
+		};
+
 		mockery.registerMock('./route_init', function () { return mockRouteyInit; });
+		mockery.registerMock('path', mockPath);
 		mockery.registerAllowable('./routey');
-		mockery.registerAllowable('path');
 
 		routey = require('./routey');
 	});
 
 	afterEach(function () {
 		mockery.deregisterAllowable('./routey');
-		mockery.deregisterAllowable('path');
+		mockery.deregisterMock('path');
 		mockery.deregisterMock('./route_init');
 
 		mockery.disable();
@@ -100,6 +111,35 @@ describe('routey', function () {
 		expect(mockRouteyInit._processDirectory).toHaveBeenCalledWith({
 			name: childDir,
 			path: fullPath,
+			parentRoute: '/',
+			config: {},
+			parent: null,
+			handlerParams: {},
+		});
+	});
+
+	it('full path to rest config directory is resolved', function () {
+
+		var inputPath = 'whatever';
+
+		var config = {
+			routeConfigPath: inputPath,
+		};
+
+		var parentDir = 'parent';
+		var childDir = 'child';
+		var resolvedPath = parentDir + '/' + childDir;
+		mockPath.resolve = function () {
+			return resolvedPath;
+		};
+
+		var app = {};
+
+		routey(config, app);
+
+		expect(mockRouteyInit._processDirectory).toHaveBeenCalledWith({
+			name: childDir,
+			path: resolvedPath,
 			parentRoute: '/',
 			config: {},
 			parent: null,
