@@ -21,6 +21,7 @@ module.exports = function RouteInitalizer(config, app) {
 
 	var fileMgr = require('./fileMgr');
 	var path = require('path');
+	var util = require('util');
 
 	// Log a verbose-only message.
 	var logVerbose = function (msg) {
@@ -73,7 +74,11 @@ module.exports = function RouteInitalizer(config, app) {
 		}
 		else {
 			// No parent, directly open this route.
-			openThisRoute(config.handlerParams || {});
+			var params = {};
+			if (config.handlerParams) {
+				params = util._extend(params, config.handlerParams);
+			}
+			openThisRoute(params);
 		}
 	};
 

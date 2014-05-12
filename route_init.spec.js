@@ -82,6 +82,7 @@ describe('route_init', function () {
 		registerRequireMock('./fileMgr', mockFileMgr);
 		mockery.registerAllowable('./route_init');
 		mockery.registerAllowable('path');
+		mockery.registerAllowable('util');
 
 		RouteInitializer = require('./route_init');
 
@@ -92,6 +93,7 @@ describe('route_init', function () {
 	afterEach(function () {
 		mockery.deregisterAllowable('./route_init');
 		mockery.deregisterAllowable('path');
+		mockery.deregisterAllowable('util');
 		unregisterRequireMocks();
 
 		mockery.disable();
@@ -249,6 +251,33 @@ describe('route_init', function () {
 
 		expect(mockGetConfig.handler)
 			.toHaveBeenCalledWith(mockReq, mockRes, handlerParams, jasmine.any(Function))
+	});
+
+	it('get.js handler params are cloned from global handler params', function () {
+
+		var handlerParams = { my: 'param' };
+		var config = {
+			handlerParams: handlerParams,
+		};
+		var testObject = new RouteInitializer(config, mockApp);
+
+		var dirName = 'child';
+		var mockGetConfig = initMockGetConfig(path.join(dirName, 'get.js'));
+
+		mockGetConfig.handler = function (req, res, params, done) {
+			params.test = "test";
+		};
+
+		testObject._processDirectory(initDir(dirName));
+
+		var handler = mockApp.get.mostRecentCall.args[1];
+
+		// Simulate a request.
+		var mockReq = {};
+		var mockRes = {};
+		handler(mockReq, mockRes);
+
+		expect(handlerParams.test).not.toBeDefined();
 	});
 
 	it('sub-directory with get.js registers for HTTP get', function () {
