@@ -47,6 +47,31 @@ module.exports = function RouteInitalizer(config, app) {
 	};
 
 	//
+	// Used for managing async operations.
+	//
+	var Async = function (callback) {
+
+		// Tracks whether the async operation has been started.
+		var started = false;
+
+		//
+		// Start the async operation.
+		//
+		this.start = function () {
+			started = true;
+
+			return callback;
+		};
+
+		//
+		// Returns true when an async operation has been started.
+		//
+		this.started = function () {
+			return started;
+		}
+	};
+
+	//
 	// Open the requested route.
 	// This is a recursive function that opens parent routes.
 	//
@@ -60,7 +85,14 @@ module.exports = function RouteInitalizer(config, app) {
 			if (dir.config.userConfig && 
 				dir.config.userConfig.openRoute) {
 				// Invoke user-defined open route callback.
-				dir.config.userConfig.openRoute(req, res, params, routeOpenDone);
+				var async = new Async(routeOpenDone);
+				dir.config.userConfig.openRoute(req, res, params, async);
+
+				if (!async.started()) {
+					// No async operation was started.
+					// Invoke callback directly to complete route opening.
+					routeOpenDone(params);
+				}
 			}
 			else {
 				// No callback, just complete route opening.
@@ -90,12 +122,22 @@ module.exports = function RouteInitalizer(config, app) {
 		if (dir.config.userConfig &&
 			dir.config.userConfig.closeRoute) {
 
-			dir.config.userConfig.closeRoute(req, res, params, function (params)  {
+			// Close the parent route.
+			var closeParentRoute = function ()  {
 				if (dir.parent) {
 					// Async close parent routes.
 					that._closeRoute(dir.parent, req, res, params);
 				}
-			});
+			}
+
+			var async = new Async(closeParentRoute);
+			dir.config.userConfig.closeRoute(req, res, params, async);
+
+			if (!async.started()) {
+				// No async operation was started.
+				// Invoke callback directly to complete route closing.
+				closeParentRoute();
+			}			
 		}
 		else {
 			if (dir.parent) {
@@ -114,9 +156,21 @@ module.exports = function RouteInitalizer(config, app) {
 		// When the route has been opened, invoke the route handler.
 		//
 		var routeOpened = function (params) {
-			routeConfig.handler(req, res, params, function () {
+			// 
+			// Close the route once it has been handled.
+			//
+			var closeRoute = function () {
 				that._closeRoute(dir, req, res, params);
-			});
+			};
+
+			var async = new Async(closeRoute);
+			routeConfig.handler(req, res, params, async);
+
+			if (!async.started()) {
+				// No async operation was started.
+				// Close the route immediately.
+				closeRoute();
+			}			
 		};
 
 		//

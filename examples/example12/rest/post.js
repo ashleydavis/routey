@@ -1,8 +1,6 @@
 
 module.exports = {
-    handler: function (req, res, params, done) {
-    	console.log(req.body);
+    handler: function (req, res, params) {
         res.send(req.body);
-        done();
-    },
+   },
 };

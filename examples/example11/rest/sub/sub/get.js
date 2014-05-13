@@ -1,7 +1,6 @@
 
 module.exports = {
-    handler: function (req, res, params, done) {
+    handler: function (req, res, params) {
         res.send(params.A + params.B + params.C);
-        done();
     },
 };

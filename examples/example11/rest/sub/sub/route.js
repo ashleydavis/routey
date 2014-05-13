@@ -1,9 +1,8 @@
 
 module.exports = {
 
-    openRoute: function (req, res, params, done) {
+    openRoute: function (req, res, params) {
 
         params.C = '!';
-        done(params);
     },
 };

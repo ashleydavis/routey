@@ -1,7 +1,6 @@
 
 module.exports = {
-    handler: function (req, res, params, done) {
+    handler: function (req, res, params) {
         res.send('first example!');
-        done();
     },
 };
