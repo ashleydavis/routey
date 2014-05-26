@@ -192,7 +192,11 @@ module.exports = function RouteInitalizer(config, app) {
 			// Require in the user-defined HTTP get config.
 			var verbConfig = require(this._formatPathForRequire(verbConfigPath));
 			if (verbConfig instanceof Function) {
-				verbConfig = verbConfig();
+				verbConfig = verbConfig(config.handlerConfig);
+			}
+
+			if (!(verbConfig.handler instanceof Function)) {
+				throw new Error("Route handler file '" + verbConfigPath + "' contains no 'handler' function.");
 			}
 
 			if (verbConfig.route) {
@@ -236,7 +240,10 @@ module.exports = function RouteInitalizer(config, app) {
 		
 			// Require in the user-defined directory config.
 			var routeConfig = require(this._formatPathForRequire(dirConfigPath));
-			dir.config.userConfig = routeConfig instanceof Function ? routeConfig() : routeConfig;
+			if (routeConfig instanceof Function) {
+				routeConfig = routeConfig(config.handlerConfig);
+			}
+			dir.config.userConfig = routeConfig;
 
 			logVerbose('Loaded dir config: ');
 			logVerbose(dir.config.userConfig);

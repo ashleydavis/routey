@@ -42,6 +42,7 @@ module.exports = function (config, app) {
         config: {},
         parent: null,
         handlerParams: config.handlerParams || {},
+        handlerConfig: config.handlerConfig || {},
     };
 
     routeInitalizer._processDirectory(routeConfigDir);
