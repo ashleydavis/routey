@@ -103,7 +103,7 @@ function initAndTest() {
 
 	var handlerToTest = routes[urlToTest];
 	if (!handlerToTest) {
-		throw new Error("Handler not registered for url: " + url-to-test);
+		throw new Error("Handler not registered for url: " + urlToTest);
 	}
 
 	//
