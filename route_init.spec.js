@@ -127,7 +127,7 @@ describe('route_init', function () {
 			},
 		};
 
-		spyOn(mockGetConfig, 'handler').andCallThrough();
+		spyOn(mockGetConfig, 'handler').and.callThrough();
 		
 		registerRequireMock(testObject._formatPathForRequire(path), function () {
 			return mockGetConfig;
@@ -146,8 +146,8 @@ describe('route_init', function () {
 			},
 		};
 
-		spyOn(mockDirConfig, 'openRoute').andCallThrough();
-		spyOn(mockDirConfig, 'closeRoute').andCallThrough();
+		spyOn(mockDirConfig, 'openRoute').and.callThrough();
+		spyOn(mockDirConfig, 'closeRoute').and.callThrough();
 
 		registerRequireMock(testObject._formatPathForRequire(path), function () {
 			return mockDirConfig;
@@ -216,7 +216,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(dirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -240,7 +240,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(dirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -268,7 +268,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(dirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -302,7 +302,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(parentDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -390,7 +390,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -412,7 +412,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(parentDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -438,7 +438,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(dirName, "", parent));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -464,7 +464,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -503,7 +503,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(dirName, "", parent));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -531,7 +531,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -569,7 +569,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(dirName, "", parent));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -598,7 +598,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName, parentDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -625,7 +625,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName, parentDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -654,7 +654,7 @@ describe('route_init', function () {
 			},			
 		}));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -684,7 +684,7 @@ describe('route_init', function () {
 			},			
 		}));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -703,7 +703,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -736,7 +736,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName, "", parent));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -767,7 +767,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName, "", parent));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
@@ -801,7 +801,7 @@ describe('route_init', function () {
 
 		testObject._processDirectory(initDir(childDirName, "", parent));
 
-		var handler = mockApp.get.mostRecentCall.args[1];
+		var handler = mockApp.get.calls.mostRecent().args[1];
 
 		// Simulate a request.
 		var mockReq = {};
