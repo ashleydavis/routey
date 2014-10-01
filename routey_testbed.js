@@ -21,7 +21,6 @@ if (verbose) {
 	console.log('Working directory: ' + process.cwd());
 	console.log('Arguments:');
 	console.log(argv);
-	console.log('URL: ' + urlToTest);
 }
 
 if (argv.routes) {
@@ -32,16 +31,13 @@ if (argv.routes) {
 	return;
 }
 
-if (argv._.length != 1) {
+if (argv._.length != 2) {
 	console.log('Usage:');
-	console.log('\tnode routey_testbed.js [--config=<path>] <url-to-test>');
+	console.log('\tnode routey_testbed.js [--config=<path>] <http-method> <url-to-test>');
 	console.log('Or (to list routes):');
 	console.log('\tnode routey_testbed.js --routes');
 	return;
 }
-
-var urlToTest = argv._[0];
-
 
 initAndTest();
 
@@ -87,30 +83,55 @@ function loadConfig() {
 
 function initAndTest() {
 
+	var httpMethod = argv._[0];
+	var urlToTest = argv._[1];
+
+	if (httpMethod === 'post' && !argv.data) {
+		throw new Error('HTTP post expects data option: ---data=<data-to-post>');
+	}
+
 	var routey = require('./routey');
 
-	var routes = {};
+	var routes = {
+		get: {},
+		post: {},
+	};
+	var postRoutes = {};
 
 	// Mock app.
 	var app = {
 		get: function (url, handler) {
-			routes[url] = handler;
+			routes.get[url] = handler;
+		},
+		post: function (url, handler) {
+			routes.post[url] = handler;
 		},
 	}; 
 
 	var config = loadConfig();
 	routey(config, app);
 
-	var handlerToTest = routes[urlToTest];
+	if (verbose) {
+		Object.keys(routes).forEach(function (httpMethod) {
+			console.log(httpMethod + ':');
+			console.log('\t' + Object.keys(routes[httpMethod]));
+		});
+	}
+
+	if (!routes[httpMethod]) {
+		throw new Error("Invalid http method: " + httpMethod);
+	}
+
+	var handlerToTest = routes[httpMethod][urlToTest];
 	if (!handlerToTest) {
-		throw new Error("Handler not registered for url: " + urlToTest);
+		throw new Error('Handler not registered for ' + httpMethod + ' ' + urlToTest);
 	}
 
 	//
 	// Mock request.
 	//
 	var req = {
-
+		body: argv.data,
 	};
 
 	// 
@@ -118,12 +139,12 @@ function initAndTest() {
 	//
 	var res = {
 		send: function (text) {
-			console.log('text');
+			console.log(text);
 		},
 	};
 
 	if (verbose) {
-		console.log('Invoking url: ' + urlToTest);	
+		console.log('Testing ' + httpMethod + ' ' + urlToTest);	
 	}
 
 	handlerToTest(req, res);
@@ -136,7 +157,10 @@ function initAndListRoutes() {
 	// Mock app.
 	var app = {
 		get: function (url, handler) {
-			 console.log(url)
+			console.log('GET ' + url)
+		},
+		post: function (url, handler) {
+			console.log('POST ' + url)
 		},
 	}; 
 
