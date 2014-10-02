@@ -10,6 +10,14 @@ Routey allows [URLs](http://en.wikipedia.org/wiki/Url) to be routed to particula
 Each handler is defined defined in a file that is named for the HTTP verb being handled, for example *get.js*, *post.js*, *put.js* and *delete.js*. Handlers can be defined in sub-directories to defined nested routes.
 
 
+Release Notes
+-------------
+
+0.0.10
+
+Routey now supports testing REST APIs from the command line using Routey Testbed. See end of README for details.
+
+
 Installation
 ------------
 
@@ -346,6 +354,49 @@ Of course that previous code snippet may not be very useful. What will be useful
     		// Now we know the ID of the database entry to delete, let's delete it!
 	    },
 	};
+
+
+Routey Testbed
+--------------
+
+Routey testbed is used to test REST APIs from the command line.
+
+It is run from the command line using _node_ and specifying the path to _routey_testbed.js__. For example if you __routey__ installed in __node_modules__:
+
+	node ./node_modules/routey/routey_testbed.js <options>
+
+You can use the testbed to list the routes (URLs) that are supported by our REST API:
+
+	node routey_testbed.js --routes
+	
+The main purpose of the testbed is to invoke your route handlers from the command line. For example HTTP GET of the route __/foo/bar__:
+
+	node routey_testbed.js get /foo/bar
+
+The output of your route handler (ie the output of your REST API) is printed to the command line.
+
+You can also test the other http verbs. To supply data, eg for a HTTP POST, used the --data option:
+
+	node routey_testbed.js post /foo/bar --data="some data"
+
+If it's more convenient put your data in a file:
+
+	node routey_testbed.js post /foo/bar --data-file=mydata.json
+
+The testbed defaults to loading route handlers from the __rest__ sub-directory under the current working directory. This can be changed by having a config file in the local directory called __routey-config.json__ or by specifying a config file using the __--config__ option. The config file is as defined in __Server Setup__.
+
+
+Following is the full spec for the testbed.
+
+Usage:
+
+	node <path-to-routey-testbed.js> [--config=<config-file-path>] <http-method> <url-to-test> [--data=<post-or-put-data>]
+
+Or:
+
+	node <path-to-routey-testbed.js> --routes
+
+
 
 
 That's all folks!
