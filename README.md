@@ -7,7 +7,7 @@ Routey can be used to simply and quickly build a [REST API](http://stackoverflow
 
 Routey allows [URLs](http://en.wikipedia.org/wiki/Url) to be routed to particular handlers. Handlers are associated with particular [HTTP request methods](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) (also known as HTTP verbs) based on the name of the file that the handler is defined in.
 
-Each handler is defined defined in a file that is named for the HTTP verb being handled, for example *get.js*, *post.js*, *put.js* and *delete.js*. Handlers can be defined in sub-directories to defined nested routes.
+Each handler is defined defined in a file that is named for the HTTP verb being handled, for example *get.js*, *post.js*, *put.js* and *delete.js*. Handlers can be defined in sub-directories to create nested routes.
 
 
 Release Notes
@@ -15,7 +15,7 @@ Release Notes
 
 0.0.10
 
-Routey now supports testing REST APIs from the command line using Routey Testbed. See end of README for details.
+Routey now supports testing REST APIs from the command line using _Routey Testbed_. See end of README for details.
 
 
 Installation
@@ -359,23 +359,23 @@ Of course that previous code snippet may not be very useful. What will be useful
 Routey Testbed
 --------------
 
-Routey testbed is used to test REST APIs from the command line.
+_Routey Testbed_ is allows you to test your REST APIs from the command line.
 
-It is run from the command line using _node_ and specifying the path to _routey_testbed.js__. For example if you __routey__ installed in __node_modules__:
+It is run from the command line using _node_ and specifying the path to _routey_testbed.js_. For example, with Routey installed in _node_modules_:
 
 	node ./node_modules/routey/routey_testbed.js <options>
 
-You can use the testbed to list the routes (URLs) that are supported by our REST API:
+You can use the testbed to list the routes that are registered by your REST API:
 
 	node routey_testbed.js --routes
 	
-The main purpose of the testbed is to invoke your route handlers from the command line. For example HTTP GET of the route __/foo/bar__:
+The main purpose of the testbed is to invoke your route handlers from the command line. For example, to test HTTP GET for the route _/foo/bar_:
 
 	node routey_testbed.js get /foo/bar
 
 The output of your route handler (ie the output of your REST API) is printed to the command line.
 
-You can also test the other http verbs. To supply data, eg for a HTTP POST, used the --data option:
+You can also test the other http verbs. To supply data, eg for a HTTP POST, use the --data option:
 
 	node routey_testbed.js post /foo/bar --data="some data"
 
@@ -383,7 +383,7 @@ If it's more convenient put your data in a file:
 
 	node routey_testbed.js post /foo/bar --data-file=mydata.json
 
-The testbed defaults to loading route handlers from the __rest__ sub-directory under the current working directory. This can be changed by having a config file in the local directory called __routey-config.json__ or by specifying a config file using the __--config__ option. The config file is as defined in __Server Setup__.
+The testbed defaults to loading route handlers from the _rest_ sub-directory under the current directory. This and other options can be set through a config file in the local directory called _routey-config.json_ or by specifying a config file using the _--config_ option. The config file is as defined in _Server Setup_.
 
 
 Following is the full spec for the testbed.
