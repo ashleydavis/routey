@@ -86,8 +86,9 @@ function initAndTest() {
 	var httpMethod = argv._[0];
 	var urlToTest = argv._[1];
 
-	if (httpMethod === 'post' && !argv.data) {
-		throw new Error('HTTP post expects data option: ---data=<data-to-post>');
+	if ((httpMethod === 'post' || httpMethod === 'put') && 
+		(!argv.data && !argv.dataFile)) {
+		throw new Error('HTTP post/put expects data or data-file option:\n\t--data=<data-to-post>\n\t--data-file=<data-file-name>');
 	}
 
 	var routey = require('./routey');
@@ -135,11 +136,24 @@ function initAndTest() {
 		throw new Error('Handler not registered for ' + httpMethod + ' ' + urlToTest);
 	}
 
+	var data = argv.data;
+	if (argv.dataFile) {
+		if (verbose) {
+			console.log("Loading data file: " + argv.dataFile);
+		}
+		data = fs.readFileSync(argv.dataFile, 'utf8');
+	}
+
+	if (verbose && data) {
+		console.log('Using data:');
+		console.log(data);
+	}
+
 	//
 	// Mock request.
 	//
 	var req = {
-		body: argv.data,
+		body: data,
 	};
 
 	// 
