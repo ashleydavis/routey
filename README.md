@@ -37,6 +37,10 @@ Examples
 
 Many examples (ranging from simple to advanced) can be found under the *examples* directory.
 
+You will need to install __dev dependencies__ for the examples to work:
+
+	npm install --dev
+
 
 Route Handlers
 --------------
