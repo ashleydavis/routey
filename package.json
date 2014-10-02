@@ -1,6 +1,6 @@
 {
   "name": "routey",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Simple automatic route setup for NodeJS",
   "main": "routey.js",
   "scripts": {
