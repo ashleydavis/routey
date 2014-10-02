@@ -390,9 +390,9 @@ Following is the full spec for the testbed.
 
 Usage:
 
-	node <path-to-routey-testbed> <http-method> <url-to-test>
+	node <path-to-routey-testbed> <http-method> <url-to-test> [<options>]
 
-Where __http-method__ is one of: _get_, _post_, _put_ or _delete_.
+Where __http-method__ is one of _get_, _post_, _put_ or _delete_.
 
 Options:
 
