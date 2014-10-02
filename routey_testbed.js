@@ -95,6 +95,8 @@ function initAndTest() {
 	var routes = {
 		get: {},
 		post: {},
+		put: {},
+		delete: {},
 	};
 	var postRoutes = {};
 
@@ -105,6 +107,12 @@ function initAndTest() {
 		},
 		post: function (url, handler) {
 			routes.post[url] = handler;
+		},
+		put: function (url, handler) {
+			routes.put[url] = handler;
+		},
+		delete: function (url, handler) {
+			routes.delete[url] = handler;
 		},
 	}; 
 
@@ -157,10 +165,16 @@ function initAndListRoutes() {
 	// Mock app.
 	var app = {
 		get: function (url, handler) {
-			console.log('GET ' + url)
+			console.log('GET ' + url);
 		},
 		post: function (url, handler) {
-			console.log('POST ' + url)
+			console.log('POST ' + url);
+		},
+		put: function (url, handler) {
+			console.log('PUT ' + url);
+		},
+		delete: function (url, handler) {
+			console.log('DELETE ' + url);
 		},
 	}; 
 
