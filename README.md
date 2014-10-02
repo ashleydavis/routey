@@ -392,7 +392,7 @@ Usage:
 
 	node <path-to-routey-testbed.js> [--config=<config-file-path>] <http-method> <url-to-test> [--data=<post-or-put-data>]
 
-Where <http-method> is one of: _get_, _post_, _put_ or _delete_.
+Where __http-method__ is one of: _get_, _post_, _put_ or _delete_.
 
 Or:
 
