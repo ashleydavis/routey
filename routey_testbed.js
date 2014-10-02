@@ -58,7 +58,7 @@ function loadConfig() {
 		config =  JSON.parse(fs.readFileSync(configFilePath));
 	} 
 	else {
-		var configFilePath = './routey-config';
+		var configFilePath = './routey-config.json';
 		if (fs.existsSync(configFilePath)) {
 			if (verbose) {
 				console.log('Defaulting to config found in working directory: '+ configFilePath);
