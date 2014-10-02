@@ -13,7 +13,7 @@ Each handler is defined defined in a file that is named for the HTTP verb being 
 Release Notes
 -------------
 
-0.0.10
+v0.0.10
 
 Routey now supports testing REST APIs from the command line using _Routey Testbed_. See end of README for details.
 
@@ -359,13 +359,13 @@ Of course that previous code snippet may not be very useful. What will be useful
 Routey Testbed
 --------------
 
-_Routey Testbed_ is allows you to test your REST APIs from the command line.
+_Routey Testbed_ allows you to test your REST APIs from the command line.
 
-It is run from the command line using _node_ and specifying the path to _routey_testbed.js_. For example, with Routey installed in _node_modules_:
+Run it with _node_ and specify the path to _routey_testbed.js_. For example, with Routey installed in _node_modules_:
 
 	node ./node_modules/routey/routey_testbed.js <options>
 
-You can use the testbed to list the routes that are registered by your REST API:
+In case you need a reminder of what your REST API can do, use Routey Testbed to list the registered routes:
 
 	node routey_testbed.js --routes
 	
@@ -391,6 +391,8 @@ Following is the full spec for the testbed.
 Usage:
 
 	node <path-to-routey-testbed.js> [--config=<config-file-path>] <http-method> <url-to-test> [--data=<post-or-put-data>]
+
+Where <http-method> is one of: _get_, _post_, _put_ or _delete_.
 
 Or:
 
