@@ -390,13 +390,22 @@ Following is the full spec for the testbed.
 
 Usage:
 
-	node <path-to-routey-testbed.js> [--config=<config-file-path>] <http-method> <url-to-test> [--data=<post-or-put-data>]
+	node <path-to-routey-testbed> <http-method> <url-to-test>
 
 Where __http-method__ is one of: _get_, _post_, _put_ or _delete_.
 
+Options:
+
+	--config=<config-file-path>
+
+	--data=<post-or-put-data>
+
+	--data-file=<data-file-path>
+
+
 Or:
 
-	node <path-to-routey-testbed.js> --routes
+	node <path-to-routey-testbed> --routes
 
 
 
