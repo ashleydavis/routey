@@ -164,6 +164,7 @@ function initAndTest() {
 	var req = {
 		body: data,
 		params: params,
+		query: {},
 	};
 
 	// 
