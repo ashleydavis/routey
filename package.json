@@ -1,6 +1,6 @@
 {
   "name": "routey",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Simple convention over configuration route setup for Express/NodeJS.",
   "main": "routey.js",
   "scripts": {
