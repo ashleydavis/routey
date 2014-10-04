@@ -91,51 +91,6 @@ function initAndTest() {
 		throw new Error('HTTP post/put expects data or data-file option:\n\t--data=<data-to-post>\n\t--data-file=<data-file-name>');
 	}
 
-	var routey = require('./routey');
-
-	var routes = {
-		get: {},
-		post: {},
-		put: {},
-		delete: {},
-	};
-	var postRoutes = {};
-
-	// Mock app.
-	var app = {
-		get: function (url, handler) {
-			routes.get[url] = handler;
-		},
-		post: function (url, handler) {
-			routes.post[url] = handler;
-		},
-		put: function (url, handler) {
-			routes.put[url] = handler;
-		},
-		delete: function (url, handler) {
-			routes.delete[url] = handler;
-		},
-	}; 
-
-	var config = loadConfig();
-	routey(config, app);
-
-	if (verbose) {
-		Object.keys(routes).forEach(function (httpMethod) {
-			console.log(httpMethod + ':');
-			console.log('\t' + Object.keys(routes[httpMethod]));
-		});
-	}
-
-	if (!routes[httpMethod]) {
-		throw new Error("Invalid http method: " + httpMethod);
-	}
-
-	var handlerToTest = routes[httpMethod][urlToTest];
-	if (!handlerToTest) {
-		throw new Error('Handler not registered for ' + httpMethod + ' ' + urlToTest);
-	}
-
 	var data = argv.data;
 	if (argv.dataFile) {
 		if (verbose) {
@@ -149,11 +104,66 @@ function initAndTest() {
 		console.log(data);
 	}
 
+	var routes = {
+		get: {},
+		post: {},
+		put: {},
+		delete: {},
+	};
+	var routeMap = {
+		get: {},
+		post: {},
+		put: {},
+		delete: {},
+	};
+	
+	// Mock app.
+	var app = {
+		get: function (url, handler) {
+			routes.get[url] = handler;
+			registerRouteMap(routeMap.get, url, handler);
+		},
+		post: function (url, handler) {
+			routes.post[url] = handler;
+			registerRouteMap(routeMap.post, url, handler);
+		},
+		put: function (url, handler) {
+			routes.put[url] = handler;
+			registerRouteMap(routeMap.put, url, handler);
+		},
+		delete: function (url, handler) {
+			routes.delete[url] = handler;
+			registerRouteMap(routeMap.delete, url, handler);
+		},
+	}; 
+
+	var config = loadConfig();
+	var routey = require('./routey');
+	routey(config, app);
+
+	if (verbose) {
+		Object.keys(routes).forEach(function (httpMethod) {
+			console.log(httpMethod + ':');
+			console.log('\t' + Object.keys(routes[httpMethod]));
+		});
+
+		console.log("Route map:");
+		console.log(routeMap);
+	}
+
+	if (!routes[httpMethod]) {
+		throw new Error("Invalid http method: " + httpMethod);
+	}
+
+	var params = {};
+	var handlerToTest = getRouteHandler(routeMap[httpMethod], urlToTest, params);
+
 	//
 	// Mock request.
 	//
 	var req = {
 		body: data,
+		params: params,
 	};
 
 	// 
@@ -170,7 +180,136 @@ function initAndTest() {
 	}
 
 	handlerToTest(req, res);
+};
+
+//
+// Register the URL with the route  map so we can later search for the handler in the tree of routes.
+//
+function registerRouteMap (map, url, handler) {
+
+	var urlParts = splitUrl(url);
+	while (urlParts.length > 0) {
+
+		var urlPart = urlParts.shift();
+		if (!map[urlPart]) {
+			map[urlPart] = {};
+		}
+		map = map[urlPart];
+	}
+
+	// End of the line.
+	if (map.handler) {
+		throw new Error("Handler for " + url + " has already been registered in the route map.");
+	}
+
+	map.handler = handler;
+};
+
+//
+// Split a URL/route into parts and remove the empties.
+//
+function splitUrl (url) {
+	var urlParts = url.split('/');
+	var output = [];
+	urlParts.forEach(function (part) {
+		if (part) {
+			output.push(part);
+		}
+	});
+
+	return output;
+};
+
+//
+// Search the route map and retreive a handler for the specified url.
+// Throws an exception if the route doesn't exist.
+//
+function getRouteHandler(routeMap, url, params) {
+
+	var urlParts = splitUrl(url);
+	return searchRouteHandler(routeMap, urlParts, url, params);
+};
+
+function getParamName(subRoute) {
+	var paramName = subRoute.substring(1);
+	if (paramName[paramName.length-1] === '?') {
+		paramName = paramName.substring(0, paramName.length-1);
+	}
+	return paramName;
+};
+
+//
+// Matches a route part in the route map and returns the corresponding object.
+// Throws for no match.
+//
+function matchUrlPart(routeMap, urlPart, url, params) {
+
+	if (routeMap[urlPart])
+	{
+		// Direct match.
+		return routeMap[urlPart];		
+	}
+
+	// Find first parameter match.
+	var subRoutes = Object.keys(routeMap);
+	for (var i = 0; i < subRoutes.length; ++i) {
+		var subRoute = subRoutes[i];
+		if (subRoute[0] === ':') {
+			// Setup the parameter.
+			params[getParamName(subRoute)] = urlPart;
+
+			// Got it.
+			return routeMap[subRoute];
+		}
+	}
+
+	throw new Error("Failed to find " + url + " in route map.");
 }
+
+//
+// Retreive a handler from the current level of the route map.
+//
+function getHandler(routeMap) {
+	if (routeMap.handler) {
+		// There is a direct handler at this level.
+		return routeMap.handler;
+	}
+
+	// Find first optional match that has a handler.
+	var subRoutes = Object.keys(routeMap);
+	for (var i = 0; i < subRoutes.length; ++i) {
+		var subRoute = subRoutes[i];
+		if (subRoute[0] === ':') {
+			if (subRoute[subRoute.length-1] === '?') {
+				// Optional parameter.
+				var handler = getHandler(routeMap[subRoute]);
+				if (handler) {
+					return handler;
+				}
+			}
+		}
+	}		
+
+	return null;
+}
+
+//
+// Recursively search the route map for a handler.
+//
+function searchRouteHandler(routeMap, urlParts, url, params) {
+	
+	if (urlParts.length == 0) {
+		// Done searching the route map, we should have found a handler.
+		var handler = getHandler(routeMap);
+		if (!handler) {
+			throw new Error("Route " + url + " is registered but has no handler.");		
+		}
+		return handler;
+	}
+
+	var subRouteMap = matchUrlPart(routeMap, urlParts.shift(), url, params);
+	return searchRouteHandler(subRouteMap, urlParts, url, params);
+};
 
 function initAndListRoutes() {
 
