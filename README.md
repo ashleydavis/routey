@@ -5,7 +5,7 @@ Simple *convention over configuration* route setup for [Express](http://expressj
 
 Routey can be used to simply and quickly build a [REST API](http://stackoverflow.com/questions/671118/what-exactly-is-restful-programming).
 
-Routey allows [URLs](http://en.wikipedia.org/wiki/Url) to be routed to particular handlers. Handlers are associated with particular [HTTP request methods](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) (also known as HTTP verbs) based on the name of the file that the handler is defined in.
+Routey allows [URLs](http://en.wikipedia.org/wiki/Url) to be routed to particular handlers. Handlers are associated with particular [HTTP verbs](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods) based on the name of the file that the handler is defined in.
 
 Each handler is defined defined in a file that is named for the HTTP verb being handled, for example *get.js*, *post.js*, *put.js* and *delete.js*. Handlers can be defined in sub-directories to create nested routes.
 
@@ -37,7 +37,7 @@ Examples
 
 Many examples (ranging from simple to advanced) can be found under the *examples* directory.
 
-You will need to install __dev dependencies__ for the examples to work:
+You will need to install _dev dependencies_ for the examples to work:
 
 	npm install --dev
 
@@ -45,29 +45,29 @@ You will need to install __dev dependencies__ for the examples to work:
 Route Handlers
 --------------
 
-When you initialize Routey you point it at your *route configuration directory*. This directory contains route handlers. There are three kinds of handlers: Open route, close route and HTTP verb. All route handler files are optional, defining the handlers allows you to add functionality to your REST API.
+When you initialize Routey you point it at your *route configuration directory*. This directory contains route handlers. There are three kinds of handlers: Open route, close route and _HTTP verb_. All route handler files are optional, defining the handlers allows you to add functionality to your REST API.
 
 HTTP verb handlers are defined in files that are named for the verbs. 
 
 As an example let's give a name to our *route configuration directory*. We'll call it *myrestconfig* and add some handlers to it for the HTTP verbs:
 
 	myrestconfig/
-		get.js 			<-- Optional file, adds a HTTP get handler to this route.
-		post.js 		<-- Optional, adds HTTP post.
-		put.js 			<-- Optional, adds HTTP put.
-		delete.js 		<-- Optional, adds HTTP delete.
+		get.js 			<-- Adds a HTTP get handler to this route.
+		post.js 		<-- Adds HTTP post.
+		put.js 			<-- Adds HTTP put.
+		delete.js 		<-- Adds HTTP delete.
 
-A setup like this creates a route with handlers for HTTP get, post, put and delete. The URL for the route depends on how you initalize Routey. As an example let's say Routey was initialized with parent route set to */myrestapi*.  This means the routes will be accessible under the parent route. The port number for the server is setup to whatever you want when you initialize Express, for the example let's say that the port number is 3000.
+A setup like this creates a route with handlers for HTTP _get_, _post_, _put_ and _delete_. The URL for the route depends on how you initalize Routey. As an example let's say Routey was initialized with parent route set to */myrestapi*.  This means the routes will be accessible under the parent route. The port number for the server is setup to whatever you want when you initialize Express, for the example let's say that the port number is 3000.
 
 The following URLs are defined (assuming access from local machine and port 3000):
 
 	http://localhost:3000/myrestapi/		<-- Supports HTTP get, post, put and delete.
 
-A REST API with only a single route is a bit useless, so let's add some sub-routes! Sub-routes are defined by creating nexted *route configuration directories*:
+A REST API with only a single route is a bit useless, so let's add some sub-routes! Sub-routes are defined by creating nested *route configuration directories*:
 
 	myrestconfig/
 		get.js 			<-- HTTP get handler for root-route.
-		sub/			<-- Sub-directory with route configuration.
+		sub/			<-- Sub-directory containing nested routes.
 			get.js      <-- HTTP get handler for sub-route.
 			post.js 	<-- Adds HTTP post.
 			put.js 		<-- Adds HTTP put.
@@ -91,7 +91,7 @@ This gives us the following route:
 
 	http://localhost:3000/myrestapi/sub1/sub2/sub3/		<-- Sub-route, supports HTTP get.
 
-A setup like this with sub-routes defines a tree of routes. When a route is handled Routey will walk down the tree invoking nested *open* handlers at each level until it reaches the end of the route. At that point it will invoke the appropriate HTTP verb handler. After that it will walk back up the tree invoking *close* handlers at each level until reaches the root-route.
+A setup like this with sub-routes defines a tree of routes. When a route is handled Routey will walk down the tree invoking nested *open* handlers at each level until it reaches the end of the route. At that point it will invoke the defined route handler. After that it will walk back up the tree invoking *close* handlers at each level until reaches the root-route.
 
 In the previous example this means that sub1 is opened before sub2, and sub2 is opened before sub3. Then after the route is handled (by *get.js* in this example) sub3 is closed, followed by sub2 being closed, followed by sub1 being closed.
 
@@ -153,7 +153,7 @@ Route Handlers
 
 Routes can be defined by creating appropriately named files in your route configuration directory. For example *get.js* defines a handler for HTTP get.  Supported verbs are *get*, *post*, *put* and *delete*.
 
-You can make a handler for HTTP get by adding a *get.js* that looks like this:
+You can make a GET handler by adding a *get.js* that looks like this:
 
 	modules.exports = {
 	    handler: function (req, res, params) {
@@ -184,7 +184,7 @@ Handlers can be defined in sub-directories to create nested sub-routes.  For exa
 Opening and Closing Routes
 --------------------------
 
-When a child route is handled we can setup code to handle the *opening* and *closing* of the route.
+When a nested route is handled we can have handlers for the *opening* and *closing* of the route.
 
 A great example of this is a REST API for accessing a database. Say for example we have a route */db/foo* which is intended to retrieve all foos from our database. When the *db* parent-route is opened it should open the database.  Then when the *foo* sub-route is opened it should query the database to retreive the *foo* collection (sorry, MongoDB bias showing through here). Then with the database and the collection a HTTP verb handler should be invoked to query or modify the database collection.
 
@@ -254,7 +254,7 @@ This allows parameters to be defined that are passed to the handler for the sub-
 
 	modules.exports = {
 	    handler: function (req, res, params) {
-	        // *params* has been defined by the open handler, use it as you will!
+	        // 'params' has been defined by the open handler, use it as you will!
 	    },
 	};
 
