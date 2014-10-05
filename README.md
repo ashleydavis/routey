@@ -97,7 +97,7 @@ In the previous example this means that sub1 is opened before sub2, and sub2 is 
 
 This allows common initalization code to be shared among multiple sub-routes. For example *sub1* might open a database connection which is then used by multiple sub-routes before it closes the sub-route after the database has been used.
 
-Route open and close handlers are define in a file called *route.js*.
+Route open and close handlers are defined in a file called *route.js*.
 
 
 Server Setup
