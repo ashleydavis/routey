@@ -180,6 +180,9 @@ function initAndTest() {
 		send: function (text) {
 			console.log(text);
 		},
+		json: function (json) {
+			console.log(json);
+		},
 	};
 
 	if (verbose) {
