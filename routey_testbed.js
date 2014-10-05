@@ -14,6 +14,7 @@
 var fs = require('fs');
 var path = require('path');
 var argv = require('yargs').argv;
+var qs = require('querystring');
 
 var verbose = argv.v || argv.verbose;
 
@@ -155,8 +156,13 @@ function initAndTest() {
 		throw new Error("Invalid http method: " + httpMethod);
 	}
 
+	var urlAndQueryString = urlToTest.split('?');
+	var url = urlAndQueryString[0];
+	var queryString = urlAndQueryString.length > 1 ? urlAndQueryString[1] : null;
+	var query = queryString && qs.parse(queryString) || {};
+
 	var params = {};
-	var handlerToTest = getRouteHandler(routeMap[httpMethod], urlToTest, params);
+	var handlerToTest = getRouteHandler(routeMap[httpMethod], url, params);
 
 	//
 	// Mock request.
@@ -164,7 +170,7 @@ function initAndTest() {
 	var req = {
 		body: data,
 		params: params,
-		query: {},
+		query: query,
 	};
 
 	// 
