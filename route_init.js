@@ -86,12 +86,12 @@ module.exports = function RouteInitalizer(config, app) {
 				dir.config.userConfig.openRoute) {
 				// Invoke user-defined open route callback.
 				var async = new Async(routeOpenDone);
-				dir.config.userConfig.openRoute(req, res, params, async);
+				var outputParams = dir.config.userConfig.openRoute(req, res, params, async) || params;
 
 				if (!async.started()) {
 					// No async operation was started.
 					// Invoke callback directly to complete route opening.
-					routeOpenDone(params);
+					routeOpenDone(outputParams);
 				}
 			}
 			else {
