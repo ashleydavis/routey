@@ -1,7 +1,7 @@
-Routey
+Routey [![Build Status](https://travis-ci.org/codecapers/routey.png)](https://travis-ci.org/codecapers/routey)
 ======
 
-[![Build Status](https://travis-ci.org/codecapers/routey.png)](https://travis-ci.org/codecapers/routey)
+
 
 Simple *convention over configuration* route setup for [Express](http://expressjs.com/)/[NodeJS](http://nodejs.org/).
 
