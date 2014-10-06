@@ -4,25 +4,35 @@
   "description": "Simple convention over configuration route setup for Express/NodeJS.",
   "main": "routey.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine-node . --verbose"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ashleydavis/routey"
+    "url": "https://github.com/codecapers/routey"
   },
   "keywords": [
     "connect",
     "express",
+    "node",
     "nodejs",
     "auto",
-    "route"
+    "automatic",
+    "simple",
+    "route",
+    "rest",
+    "restful",
+    "api",
+    "convention",
+    "over",
+    "configuration",
+    "web"
   ],
-  "author": "Ashley Davis",
+  "author": "Ashley Davis <ashley@codecapers.com.au>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ashleydavis/routey/issues"
+    "url": "https://github.com/codecapers/routey/issues"
   },
-  "homepage": "https://github.com/ashleydavis/routey",
+  "homepage": "https://github.com/codecapers/routey",
   "devDependencies": {
     "mockery": "^1.4.0",
     "express": "~4.1.1",
