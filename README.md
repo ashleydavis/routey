@@ -1,6 +1,8 @@
 Routey
 ======
 
+[![Build Status](https://travis-ci.org/codecapers/routey.png)](https://travis-ci.org/codecapers/routey)
+
 Simple *convention over configuration* route setup for [Express](http://expressjs.com/)/[NodeJS](http://nodejs.org/).
 
 Routey can be used to simply and quickly build a [REST API](http://stackoverflow.com/questions/671118/what-exactly-is-restful-programming).
