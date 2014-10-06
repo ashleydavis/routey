@@ -1,7 +1,7 @@
 {
   "name": "routey",
   "version": "0.0.16",
-  "description": "Simple convention over configuration route setup for Express/NodeJS.",
+  "description": "Simple convention over configuration route setup for Express/NodeJS",
   "main": "routey.js",
   "scripts": {
     "test": "jasmine-node . --verbose"
